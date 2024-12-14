@@ -22,7 +22,7 @@ export default function TeacherDetailsPage() {
   };
 
   const goToCoursewareUpload = (courseId) => {
-    router.push(`/teacher/upload?courseId=${courseId}`);
+    router.push(`/teacher/upload`);
   };
 
   const goToHomeworkPublish = (courseId) => {
@@ -34,7 +34,7 @@ export default function TeacherDetailsPage() {
       <div className={styles.profile}>
         <Image
           src={whyAvatar}
-          alt="教师头像"
+          alt="教师头像" 
           className={styles.avatar}
         />
         <div className={styles.info}>
