@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "antd": "^5.22.4",
     "mysql2": "^3.11.5",
+    "next": "15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.0"
+    "react-dom": "^19.0.0"
   }
 }
