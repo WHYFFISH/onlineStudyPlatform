@@ -50,7 +50,7 @@ try {
 ```
 
 
-# 数据库表结构设计
+# 数据库结构设计
 
 ## Users 表（用户表）
 | 字段名 | 类型 | 说明 |
@@ -76,6 +76,11 @@ try {
 | status | ENUM | 课程状态(draft/published/archived) |
 | price | DECIMAL(10,2) | 课程价格 |
 | created_at | TIMESTAMP | 创建时间 |
+| author | VARCHAR(255) | 课程作者名字 |
+| updated_at | TIMESTAMP | 更新时间，默认为当前时间并在更新时自动更新 |
+| likes | INT | 收藏人数，默认为0 |
+| registration_count | INT | 注册人数，默认为0 |
+
 
 ## Chapters 表（课程章节表）
 | 字段名 | 类型 | 说明 |
@@ -149,7 +154,6 @@ try {
 | id | INT | 注册记录ID，主键，自增 |
 | user_id | INT | 学生ID，外键关联Users表 |
 | course_id | INT | 课程ID，外键关联Courses表 |
-| progress | INT | 学习进度(0-100) |
 | completed_hours | INT | 已完成课时 |
 | last_studied_at | TIMESTAMP | 最后学习时间 |
 | enrollment_date | TIMESTAMP | 注册时间 |
@@ -173,7 +177,7 @@ try {
 | id | INT | 练习题ID，主键，自增 |
 | chapter_id | INT | 章节ID，外键关联Chapters表 |
 | question | TEXT | 题目内容 |
-| type | ENUM | 题目类型(single_choice/multiple_choice/true_false/fill_blank/short_answer) |
+| type | ENUM | 题目类型(single_choice/multiple_choice/true_false/fill_blank/short_answer/text) |
 | options | JSON | 选项内容 |
 | answer | TEXT | 正确答案 |
 | explanation | TEXT | 答案解释 |
