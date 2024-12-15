@@ -1,7 +1,97 @@
 .centertitle{
     text-align: center; /* 文本水平居中 */
-    margin: 20px 0;     /* 上下间距 */
+    margin: 30px 0;     /* 上下间距 */
     font-size: 2.5rem;  /* 字体大小 */
     color: #333;        /* 字体颜色 */
     font-weight: bold;  /* 字体加粗 */
 }
+
+.centerContainer {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中 */
+    flex-direction: column;  /* 垂直排列 */
+    height: 100%;            /* 父容器高度占满 */
+    
+     
+  }
+
+  .labelInputContainer {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 标签和输入框之间的间隔 */
+  }
+  
+  .labelInputContainer label {
+    font-size: 18px; /* 调大“课程名”字体 */
+    font-weight: 500;
+  }
+
+  .InfoInputContainer {
+    display: grid;
+    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 标签和输入框之间的间隔 */
+  }
+  
+  .InfoInputContainer label {
+    text-align: left; 
+    font-size: 18px; /* 调大“课程名”字体 */
+    font-weight: 500;
+  }
+
+  .teachersContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.teachersContainer label {
+    font-size: 18px; /* 调大“课程名”字体 */
+    font-weight: 500;
+  }
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.teacherRow {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 10px; /* 输入框与按钮之间的间距 */
+}
+
+.shortInput {
+  width: 150px; /* 输入框宽度 */
+}
+
+.addButton {
+  margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center; 
+  }
+  
+  .actionButton {
+    padding: 12px 18px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  
+  .actionButton:hover {
+    background-color: #005bb5;
+  }

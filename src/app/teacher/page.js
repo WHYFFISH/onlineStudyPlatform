@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import whyAvatar from "../../assets/teacher/why.jpg"
 import Image from "next/image";
+import Link from 'next/link';
 
 export default function TeacherDetailsPage() {
   const router = useRouter();
@@ -29,6 +30,10 @@ export default function TeacherDetailsPage() {
     router.push(`/teacher/homework?courseId=${courseId}`);
   };
 
+  const redirectToCoursePage=()=>{
+    router.push(`/teacher/PublishClass`);
+  }
+
   return (
     <div className={styles.teacherDetails}>
       <div className={styles.profile}>
@@ -41,7 +46,13 @@ export default function TeacherDetailsPage() {
           <h1>{teacherInfo.name}</h1>
           <p>{teacherInfo.bio}</p>
         </div>
+        <Link href="teacher/PublishClass">
+        <button className="publish-btn">发布课程</button>
+      </Link>
+
       </div>
+
+      
 
       <div className={styles.courses}>
         <h2>我的课程</h2>

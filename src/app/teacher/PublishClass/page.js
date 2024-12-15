@@ -10,9 +10,10 @@ import Image from "next/image";
 import ImageSorter from "../../teacher/components/drag";
 import style from "./PublishClass.module.css"; 
 import UploadFileContent from "../../teacher/components/UploadFileContent";
-
-
-const { Header, Content, Footer, Sider } = Layout;
+import ClassInfoContent from "../../teacher/components/classInfoContent";
+import NavigatorMenu from "../../components/navigatorMenu/page";
+import Footer from "../../components/footer/page";
+const { Header, Content, Sider } = Layout;
 const initialImages = [
     { id: 1, src: "../../assets/teacher/why.jpg", alt: "课程图片1" },
     { id: 2, src: "../../assets/teacher/test1.png", alt: "课程图片2" },
@@ -23,7 +24,7 @@ const initialImages = [
   };
 // 定义每一栏对应的内容
 const sections = {
-  option1: <div>这是 Option 1 的界面内容。</div>,
+  option1: <ClassInfoContent/>,
   option2: <div>这是 Option 2 的界面内容。</div>,
   files: <UploadFileContent/>,
 };
@@ -45,6 +46,7 @@ const App = () => {
 
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <NavigatorMenu/>
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -52,7 +54,7 @@ const App = () => {
           mode="inline"
           onClick={handleMenuClick} // 绑定点击事件
           items={[
-            { key: "option1", icon: <PieChartOutlined />, label: "Option 1" },
+            { key: "option1", icon: <PieChartOutlined />, label: "课程信息" },
             { key: "option2", icon: <DesktopOutlined />, label: "Option 2" },
             { key: "files", icon: <FileOutlined />, label: "文件上传" },
           ]}
@@ -71,9 +73,7 @@ const App = () => {
         >
           {sections[currentSection]} {/* 根据当前选择显示内容 */}
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <Footer/>
       </Layout>
     </Layout>
   );
