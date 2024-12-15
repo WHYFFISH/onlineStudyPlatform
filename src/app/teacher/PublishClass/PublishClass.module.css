@@ -1,0 +1,7 @@
+.centertitle{
+    text-align: center; /* 文本水平居中 */
+    margin: 20px 0;     /* 上下间距 */
+    font-size: 2.5rem;  /* 字体大小 */
+    color: #333;        /* 字体颜色 */
+    font-weight: bold;  /* 字体加粗 */
+}

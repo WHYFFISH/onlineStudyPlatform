@@ -34,7 +34,7 @@ export default function TeacherDetailsPage() {
       <div className={styles.profile}>
         <Image
           src={whyAvatar}
-          alt="教师头像" 
+          alt="教师头像" git
           className={styles.avatar}
         />
         <div className={styles.info}>

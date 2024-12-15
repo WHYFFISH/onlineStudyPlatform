@@ -4,19 +4,20 @@ import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
+
 const props = {
   name: 'file',
   multiple: true,
   action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
   onChange(info) {
-    const { status } = info.file;
+    const { status } = info.file || {};  // Ensuring info.file is defined
     if (status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
     if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
+      alert(`${info.file?.name} npmfile uploaded successfully.`);
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      alert(`${info.file?.name} file upload failed.`);
     }
   },
   onDrop(e) {
@@ -31,11 +32,10 @@ const App = () => (
     </p>
     <p className="ant-upload-text">Click or drag file to this area to upload</p>
     <p className="ant-upload-hint">
-      Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+      Support for single or bulk upload. Strictly prohibited from uploading company data or other
       banned files.
     </p>
   </Dragger>
 );
 
-export default App;         
-           
+export default App;
