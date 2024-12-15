@@ -1,0 +1,33 @@
+.profileCard {
+  width: 300px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 20px;
+  border: none;
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  /* background-color: #1890ff;  */
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
+
+.userName {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.courseButton {
+  width: 100%;
+  font-size: 16px;
+}
