@@ -87,6 +87,16 @@ const HomePage = () => {
   const [sortOrder, setSortOrder] = useState('ascend');
   const router = useRouter();
 
+  // 点击事件处理，跳转到登录页面
+  const handleLoginClick = () => {
+    router.push("/auth/login");
+  };
+
+  // 点击事件处理，跳转到注册页面
+  const handleRegisterClick = () => {
+    router.push("/auth/register");
+  };
+
   // 点击事件处理，跳转到课程详情页
   const handleCourseClick = (id) => {
     router.push(`/course/${id}`);
@@ -133,8 +143,8 @@ const HomePage = () => {
             onChange={handleSearch}
             style={{ width: 260, marginRight: '60px' }}
           />
-          <Button type="primary">登录</Button>
-          <Button style={{ marginLeft: 10 }}>注册</Button>
+          <Button type="primary" onClick={handleLoginClick}>登录</Button>
+          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
         </div>
       </div>
 

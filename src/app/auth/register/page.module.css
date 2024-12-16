@@ -1,0 +1,59 @@
+/* 页面背景 */
+.pageBackground {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color:  #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+/* 注册模块容器 */
+.container {
+    max-width: 400px;
+    width: 100%;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* 圆角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* 标题样式 */
+.title {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 表单样式 */
+.form .ant-form-item {
+    margin-bottom: 16px;
+}
+
+.form .ant-input {
+    height: 40px;
+}
+
+.form .ant-btn {
+    height: 40px;
+    font-size: 16px;
+}
+
+/* 添加渐入动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
