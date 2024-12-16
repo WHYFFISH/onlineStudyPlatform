@@ -97,8 +97,8 @@ const HomePage = () => {
             onChange={handleSearch}
             style={{ width: 260, marginRight: '60px' }}
           />
-          <Button type="primary">登录</Button>
-          <Button style={{ marginLeft: 10 }}>注册</Button>
+          <Button type="primary" onClick={handleLoginClick}>登录</Button>
+          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
         </div>
       </div>
 

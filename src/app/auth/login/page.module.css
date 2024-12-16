@@ -1,0 +1,103 @@
+/* 页面背景 */
+.pageBackground {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
+    display: flex; /* 使用flexbox */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+}
+
+/* 登录模块容器 */
+.container {
+    max-width: 400px;  /* 设置最大宽度 */
+    width: 100%;  /* 使容器适应宽度 */
+    padding: 40px;
+    background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* 圆角 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+    animation: fadeIn 1s ease-in-out; /* 渐入动画 */
+    box-sizing: border-box;
+}
+
+/* 标题 */
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 24px;
+    color: #333;
+}
+
+/* 输入选项 */
+.options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+/* 按钮样式 */
+.button {
+    height: 40px;
+    font-size: 16px;
+    background-color: #1890ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* 让按钮充满容器宽度 */
+}
+
+.button:hover {
+    background-color: #40a9ff;
+}
+
+/* 链接样式 */
+.link {
+    color: #1890ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: #40a9ff;
+}
+
+/* Footer 样式 */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #40a9ff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* 渐入动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
