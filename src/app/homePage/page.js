@@ -51,6 +51,17 @@ const HomePage = () => {
     fetchCourses();
   }, []);
 
+  
+  // 点击事件处理，跳转到登录页面
+  const handleLoginClick = () => {
+    router.push("/auth/login");
+  };
+
+  // 点击事件处理，跳转到注册页面
+  const handleRegisterClick = () => {
+    router.push("/auth/register");
+  };
+
   // 点击事件处理，跳转到课程详情页
   const handleCourseClick = (id) => {
     router.push(`/course/${id}`);
