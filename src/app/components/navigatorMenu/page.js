@@ -11,29 +11,33 @@ const NavigatorMenu = ({ initialCurrent }) => {
 
   const items = [
     {
+      key: 'home',
+      label: (
+        <a href="/homePage" rel="noopener noreferrer">
+          首页
+        </a>
+      ),
+    },
+    {
       key: 'course',
       label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="/course"  rel="noopener noreferrer">
           课程
         </a>
       ),
     },
     {
-      key: 'school',
+      key: 'teacher',
       label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          学校
+        <a href="/teacher"  rel="noopener noreferrer">
+          教师
         </a>
       ),
     },
     {
-      key: 'teacher',
-      label: '教师'
-    },
-    {
-      key: 'alipay',
+      key: 'personal',
       label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="/student" rel="noopener noreferrer">
           个人
         </a>
       ),
