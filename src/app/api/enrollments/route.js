@@ -1,0 +1,42 @@
+import { NextResponse } from 'next/server';
+import { query } from '@/app/utils/db';
+
+export async function POST(request) {
+    try {
+        const { courseId } = await request.json();
+        const userId = 1; // TODO: 从session获取用户ID
+
+        // 检查是否已经注册
+        const [existing] = await query(
+            'SELECT id FROM enrollments WHERE user_id = ? AND course_id = ?',
+            [userId, courseId]
+        );
+
+        if (existing) {
+            return NextResponse.json(
+                { error: '已经注册过该课程' },
+                { status: 400 }
+            );
+        }
+
+        // 注册课程
+        await query(
+            `INSERT INTO enrollments (
+                user_id, 
+                course_id, 
+                completed_hours,
+                enrollment_date
+            ) VALUES (?, ?, 0, NOW())`,
+            [userId, courseId]
+        );
+
+        return NextResponse.json({ message: '注册成功' });
+
+    } catch (error) {
+        console.error('注册课程失败:', error);
+        return NextResponse.json(
+            { error: '注册课程失败' },
+            { status: 500 }
+        );
+    }
+} 
