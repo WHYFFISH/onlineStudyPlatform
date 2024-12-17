@@ -67,11 +67,10 @@ export async function POST(request) {
         const {
             title,
             description,
-            thumbnail,
             total_hours,
             instructor_id,
             price,
-            status = 'draft'  // 默认为草稿状态
+            status = 'published'
         } = await request.json();
 
         if (!title || !instructor_id) {
@@ -98,7 +97,6 @@ export async function POST(request) {
             `INSERT INTO courses (
                 title, 
                 description, 
-                thumbnail, 
                 total_hours,
                 instructor_id,
                 price,
@@ -108,7 +106,6 @@ export async function POST(request) {
             [
                 title,
                 description,
-                thumbnail,
                 total_hours || 0,
                 instructor_id,
                 price || 0.00,

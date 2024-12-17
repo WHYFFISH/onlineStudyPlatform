@@ -4,7 +4,7 @@ import { query } from '@/app/utils/db';
 export async function POST(request) {
     try {
         const { courseId } = await request.json();
-        const userId = 1; // TODO: 从session获取用户ID
+        const userId = 2; // TODO: 从session获取用户ID
 
         // 检查是否已经注册
         const [existing] = await query(
@@ -28,6 +28,12 @@ export async function POST(request) {
                 enrollment_date
             ) VALUES (?, ?, 0, NOW())`,
             [userId, courseId]
+        );
+
+        // 更新课程的注册人数和收藏人数
+        await query(
+            'UPDATE courses SET registration_count = registration_count + 100,likes = likes + 1 WHERE id = ?',
+            [courseId]
         );
 
         return NextResponse.json({ message: '注册成功' });

@@ -1,5 +1,5 @@
 "use client"
-import { Select, Carousel, Menu, Card, Row, Col, Button, Input, Badge, notification, List, Divider } from 'antd';
+import { Select, Carousel, Menu, Card, Row, Col, Button, Input, Badge, notification, List, Divider, message } from 'antd';
 import { useState, useEffect } from 'react';
 import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -154,6 +154,32 @@ const CoursePage = () => {
     }
   };
 
+  // 注册课程的处理函数
+  const handleJoinCourse = async () => {
+    try {
+      const response = await fetch('/api/enrollments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseId: courseId }), // 发送课程ID
+        // TODO：从session获取用户ID
+        // body: JSON.stringify({ userId: userId, courseId: courseId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error || '注册课程失败'); // 使用 alert 显示错误信息
+        return;
+      }
+
+      alert('注册成功'); // 使用 alert 显示成功信息
+      window.location.reload();
+    } catch (error) {
+      console.error('注册课程时发生错误:', error);
+      alert('注册课程失败'); // 使用 alert 显示错误信息
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -225,8 +251,8 @@ const CoursePage = () => {
               <option>【MOOC学分课】2024年秋季学期</option>
             </select>
           </div>
-
-          <button className={styles.joinButton}>加入课程</button>
+          {/* TODO：从session获取用户ID并判断是否已经注册该课程 */}
+          <button className={styles.joinButton} onClick={handleJoinCourse}>加入课程</button>
 
 
           <div className={styles.bottom}>
