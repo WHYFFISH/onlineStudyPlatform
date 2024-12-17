@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation'
 const HomePage = () => {
 
   const [courses, setCourses] = useState([]);
+  const [hotCourses, setHotCourses] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,8 +51,14 @@ const HomePage = () => {
   useEffect(() => {
     fetchCourses();
   }, []);
+  useEffect(() => {
+    // 对 courses 按照 registration_count 进行降序排序
+    const sortedCourses = [...courses].sort((a, b) => b.registration_count - a.registration_count);
+    // 将排序后的课程存入 hotCourses
+    setHotCourses(sortedCourses);
+  }, [courses])
 
-  
+
   // 点击事件处理，跳转到登录页面
   const handleLoginClick = () => {
     router.push("/auth/login");
@@ -280,35 +287,10 @@ const HomePage = () => {
       {/* 热门课程 */}
       <div className={styles.recommendedCoursesTitle}>
         <h2>热门课程</h2>
-        <div className={styles.filterControls}>
-          <Select
-            value={sortField}
-            onChange={(value) => setSortField(value)}
-            style={{ width: 200, marginRight: 10 }}
 
-          >
-            <Select.Option value="publishDate">发布时间</Select.Option>
-            <Select.Option value="registrationCount">注册人数</Select.Option>
-            <Select.Option value="updateDate">更新时间</Select.Option>
-            <Select.Option value="likes">点赞人数</Select.Option>
-          </Select>
-
-          <Select
-            value={sortOrder}
-            onChange={(value) => setSortOrder(value)}
-            style={{ width: 120, marginRight: 10 }}
-          >
-            <Select.Option value="ascend">升序</Select.Option>
-            <Select.Option value="descend">降序</Select.Option>
-          </Select>
-
-          <Button type="primary" onClick={handleSort}>
-            排序
-          </Button>
-        </div>
       </div>
       <div className={styles.recommendedCoursesList}>
-        {courses.map((course) => (
+        {hotCourses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
               alt={course.title} width={200} height={120} />
@@ -328,32 +310,6 @@ const HomePage = () => {
       {/* 最新课程 */}
       <div className={styles.recommendedCoursesTitle}>
         <h2>最新课程</h2>
-        <div className={styles.filterControls}>
-          <Select
-            value={sortField}
-            onChange={(value) => setSortField(value)}
-            style={{ width: 200, marginRight: 10 }}
-
-          >
-            <Select.Option value="publishDate">发布时间</Select.Option>
-            <Select.Option value="registrationCount">注册人数</Select.Option>
-            <Select.Option value="updateDate">更新时间</Select.Option>
-            <Select.Option value="likes">点赞人数</Select.Option>
-          </Select>
-
-          <Select
-            value={sortOrder}
-            onChange={(value) => setSortOrder(value)}
-            style={{ width: 120, marginRight: 10 }}
-          >
-            <Select.Option value="ascend">升序</Select.Option>
-            <Select.Option value="descend">降序</Select.Option>
-          </Select>
-
-          <Button type="primary" onClick={handleSort}>
-            排序
-          </Button>
-        </div>
       </div>
       <div className={styles.recommendedCoursesList}>
         {courses.map((course) => (
