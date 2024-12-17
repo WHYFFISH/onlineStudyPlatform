@@ -3,35 +3,30 @@ import { Input, Button, Space } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import style from "../../teacher/PublishClass/PublishClass.module.css";
 
-const TeachersInfo = () => {
+const TeachersInfo = ({ onTeachersChange }) => {
   // 用于存储所有老师信息的输入框
-  const [teachers, setTeachers,workPlace] = useState([{ id: 1, name: "" ,place:""}]);
+  const [teachers, setTeachers] = useState([{ id: 1, name: "" ,place:""}]);
 
   // 添加新的输入框
   const addTeacher = () => {
-    setTeachers([...teachers, { id: Date.now(), name: "" }]);
+    setTeachers([...teachers, { id: Date.now(), name: "" ,place:""}]);
   };
 
   // 更新输入框的值
-  const updateTeacherName = (id, value) => {
+  const updateTeacher = (id, field, value) => {
     const updatedTeachers = teachers.map((teacher) =>
-      teacher.id === id ? { ...teacher, name: value } : teacher
+      teacher.id === id ? { ...teacher, [field]: value } : teacher
     );
     setTeachers(updatedTeachers);
+    onTeachersChange(updatedTeachers); // 通知父组件
   };
 
-  const updateTeacherPlace = (id, value) => {
-    const updatedTeachers = teachers.map((teacher) =>
-      teacher.id === id ? { ...teacher, place: value } : teacher
-    );
-    setTeachers(updatedTeachers);
-  };
-
-  // 删除输入框
   const removeTeacher = (id) => {
     const filteredTeachers = teachers.filter((teacher) => teacher.id !== id);
     setTeachers(filteredTeachers);
+    onTeachersChange(filteredTeachers); // 通知父组件
   };
+ 
 
   return (
     <div className={style.teachersContainer}>
@@ -44,14 +39,14 @@ const TeachersInfo = () => {
           <Input
             placeholder="请输入老师姓名"
             value={teacher.name}
-            onChange={(e) => updateTeacherName(teacher.id, e.target.value)}
+            onChange={(e) => updateTeacher(teacher.id, "name",e.target.value)}
             className={style.shortInput}
           />
           <label>单位：</label>
           <Input
             placeholder="请输入老师单位"
             value={teacher.place}
-            onChange={(e) => updateTeacherName(teacher.place, e.target.value)}
+            onChange={(e) => updateTeacher(teacher.id, "place",e.target.value)}
             className={style.shortInput}
           />
           {/* 删除按钮 */}

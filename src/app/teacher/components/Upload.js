@@ -36,7 +36,7 @@ export default function App() {
   };
   return (
     <div className={styles.container}>
-      <h2>文件上传</h2>
+      <h2>课程文件上传</h2>
       <Upload {...props} fileList={fileList}>
         <Button icon={<UploadOutlined />}>Upload</Button>
       </Upload>

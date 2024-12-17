@@ -1,6 +1,6 @@
 import React from 'react';
 import style from "../../teacher/PublishClass/PublishClass.module.css"; 
-import ImageSorter from "../../teacher/components/drag";
+import ImageSorter from "./UploadPicDrag";
 import Upload from "../../teacher/components/Upload";
 
 const initialImages = [
