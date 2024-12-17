@@ -56,6 +56,10 @@ const Login = () => {
         }
     };
 
+    // 处理跳转到注册页面
+    const handleRegister = () => {
+        router.push("/register"); // 跳转到注册页面
+    };
 
     return (
         <div className={styles.pageBackground}>
@@ -111,7 +115,7 @@ const Login = () => {
                         <Form.Item name="remember" valuePropName="checked">
                             <Checkbox>记住账号</Checkbox>
                         </Form.Item>
-                        <a href="/forgot-password" className={styles.link}>
+                        <a href="/auth/register" className={styles.link}>
                             注册/忘记密码？
                         </a>
                     </div>
