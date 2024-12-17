@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Typography, Radio } from "antd";
 import styles from "./page.module.css";
 
@@ -12,26 +12,52 @@ const Register = () => {
     const [isPhoneVerification, setIsPhoneVerification] = useState(false);
     const [registrationType, setRegistrationType] = useState("studentId"); // 默认选择学号注册
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         setLoading(true);
 
-        // 模拟注册逻辑
-        setTimeout(() => {
-            message.success("注册成功！请登录");
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: values.username, // 账号
+                    password: values.password, // 密码
+                    email: values.email,       // 邮箱
+                    phone: values.phone,       // 手机号
+                    role: "student",           // 角色
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("注册成功！请登录");
+            } else {
+                alert(data.error || "注册失败，请稍后再试");
+            }
+        } catch (error) {
+            console.error("注册请求失败:", error);
+            alert("注册请求失败，请检查网络连接！");
+        } finally {
             setLoading(false);
-        }, 1500);
+        }
     };
+
+
+
 
     const handleEmailVerification = () => {
         // 模拟发送邮箱验证码
         setIsEmailVerification(true);
-        message.success("验证码已发送到您的校内邮箱，请查收！");
+        alert("验证码已发送到您的校内邮箱，请查收！");
     };
 
     const handlePhoneVerification = () => {
         // 模拟发送短信验证码
         setIsPhoneVerification(true);
-        message.success("验证码已发送到您的手机，请查收！");
+        alert("验证码已发送到您的手机，请查收！");
     };
 
     return (
@@ -116,6 +142,15 @@ const Register = () => {
                         ]}
                     >
                         <Input placeholder="请输入短信验证码" />
+                    </Form.Item>
+
+                    {/* 账号输入 */}
+                    <Form.Item
+                        label="账号"
+                        name="username"
+                        rules={[{ required: true, message: "请输入账号" }]}
+                    >
+                        <Input placeholder="请输入账号" />
                     </Form.Item>
 
                     {/* 密码设置 */}

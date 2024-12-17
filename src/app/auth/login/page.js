@@ -5,7 +5,6 @@ import { Form, Input, Button, Select, Checkbox, Typography, message } from "antd
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useRouter } from "next/navigation"; // 导入路由跳转功能
 import bcrypt from "bcryptjs";
-import { mockUsers, failedAttempts } from "../../mockData";
 import styles from "./page.module.css";
 import "antd/dist/reset.css"; // Ant Design 样式
 
@@ -22,69 +21,41 @@ const Login = () => {
     const [role, setRole] = useState("student"); // 默认角色
     const router = useRouter(); // 使用 Next.js 的路由跳转
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         setLoading(true);
 
-        const ip = getIpAddress();
-        const deviceId = getDeviceId();
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: values.username, // 账号
+                    password: values.password, // 密码
+                    role: values.role,         // 登录角色
+                }),
+            });
 
-        // 检查 IP 和设备号是否已被冻结
-        if (failedAttempts.ip[ip] >= MAX_ATTEMPTS) {
-            alert("当前IP已被冻结，请稍后再试");
-            setLoading(false);
-            return;
-        }
+            const data = await response.json();
 
-        if (failedAttempts.device[deviceId] >= MAX_ATTEMPTS) {
-            alert("当前设备已被冻结，请稍后再试");
-            setLoading(false);
-            return;
-        }
-
-        // 查找用户数据
-        const users = mockUsers[role];
-        const user = users.find((u) => u.username === values.username);
-
-        if (!user) {
-            alert("账号不存在！");
-            setLoading(false);
-            return;
-        }
-
-        // 验证密码
-        if (bcrypt.compareSync(values.password, user.password)) {
-            alert(`${role} 登录成功！`);
-
-            // 保存账号到 localStorage
-            if (values.remember) {
-                localStorage.setItem("rememberedAccount", values.username);
+            if (response.ok) {
+                // 登录成功
+                alert("登录成功！");
+                localStorage.setItem("rememberedAccount", values.username); // 记住账号
+                router.push("/homePage"); // 跳转到主页
             } else {
-                localStorage.removeItem("rememberedAccount");
+                // 登录失败，提示错误信息
+                alert(data.error || "登录失败，请稍后重试");
             }
-
-            // 清除失败记录
-            failedAttempts.ip[ip] = 0;
-            failedAttempts.device[deviceId] = 0;
-
-            // 跳转到主页
-            router.push("/homePage");
-        } else {
-            // 更新失败记录
-            failedAttempts.ip[ip] = (failedAttempts.ip[ip] || 0) + 1;
-            failedAttempts.device[deviceId] = (failedAttempts.device[deviceId] || 0) + 1;
-
-            alert(
-                `密码错误！还有 ${MAX_ATTEMPTS - failedAttempts.ip[ip]} 次尝试机会`
-            );
-
-            // 冻结账号或IP地址
-            if (failedAttempts.ip[ip] >= MAX_ATTEMPTS) {
-                alert("账号或IP地址已被冻结，请稍后再试");
-            }
+        } catch (error) {
+            console.error("登录请求失败:", error);
+            alert("登录请求失败，请检查网络连接！");
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
+
 
     return (
         <div className={styles.pageBackground}>
