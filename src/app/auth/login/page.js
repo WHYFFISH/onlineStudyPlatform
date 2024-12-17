@@ -141,7 +141,7 @@ const Login = () => {
                             <Checkbox>记住账号</Checkbox>
                         </Form.Item>
                         <a href="/forgot-password" className={styles.link}>
-                            忘记密码？
+                            注册/忘记密码？
                         </a>
                     </div>
                     <Form.Item
