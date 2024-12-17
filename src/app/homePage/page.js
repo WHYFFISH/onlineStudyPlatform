@@ -20,72 +20,47 @@ import NavigatorMenu from '../components/navigatorMenu/page';
 import { useRouter } from 'next/navigation'
 
 const HomePage = () => {
-  // 课程数据数组
-  const initialCourses = [
-    {
-      id: 1,
-      name: '庄子精讲',
-      school: '深圳大学',
-      author: '王阳明',
-      image: course1,
-      publishDate: '2023-01-15',
-      registrationCount: 150,
-      updateDate: '2024-01-01',
-      likes: 200,
-    },
-    {
-      id: 2,
-      name: '音乐与健康',
-      school: '深圳大学',
-      author: '王阳明',
-      image: course2,
-      publishDate: '2023-02-20',
-      registrationCount: 300,
-      updateDate: '2024-02-10',
-      likes: 450,
-    },
-    {
-      id: 3,
-      name: '谈判技巧',
-      school: '深圳大学',
-      author: '王阳明',
-      image: course3,
-      publishDate: '2023-03-10',
-      registrationCount: 180,
-      updateDate: '2024-03-05',
-      likes: 220,
-    },
-    {
-      id: 4,
-      name: '数字电路',
-      school: '深圳大学',
-      author: '王阳明',
-      image: course4,
-      publishDate: '2022-12-10',
-      registrationCount: 500,
-      updateDate: '2024-01-15',
-      likes: 600,
-    },
-    {
-      id: 5,
-      name: '线性代数',
-      school: '深圳大学',
-      author: '王阳明',
-      image: course5,
-      publishDate: '2023-05-05',
-      registrationCount: 250,
-      updateDate: '2024-04-01',
-      likes: 320,
-    },
-  ];
 
-  const [courses, setCourses] = useState(initialCourses);
-  console.log(courses)
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('publishDate');
   const [sortOrder, setSortOrder] = useState('ascend');
   const router = useRouter();
+
+  const fetchCourses = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/courses');
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
+      }
+      const data = await response.json();
+      setCourses(data);
+      console.log(data);
+    } catch (err) {
+      message.error('Failed to fetch courses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 在组件挂载时调用接口
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  
+  // 点击事件处理，跳转到登录页面
+  const handleLoginClick = () => {
+    router.push("/auth/login");
+  };
+
+  // 点击事件处理，跳转到注册页面
+  const handleRegisterClick = () => {
+    router.push("/auth/register");
+  };
 
   // 点击事件处理，跳转到课程详情页
   const handleCourseClick = (id) => {
@@ -111,6 +86,13 @@ const HomePage = () => {
     setSearchTerm(e.target.value);
   };
 
+  // 回车事件处理，触发页面跳转
+  const handlePressEnter = () => {
+    if (searchTerm.trim()) {
+      router.push(`/searchPage?keyword=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
 
 
   const courseItems = ['全科备考', '择校', '英语'];
@@ -124,7 +106,7 @@ const HomePage = () => {
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-        <NavigatorMenu initialCurrent={'course'}/>
+        <NavigatorMenu initialCurrent={'home'} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Input
             prefix={<SearchOutlined />}
@@ -132,9 +114,10 @@ const HomePage = () => {
             value={searchTerm}
             onChange={handleSearch}
             style={{ width: 260, marginRight: '60px' }}
+            onPressEnter={handlePressEnter} // 监听回车事件
           />
-          <Button type="primary">登录</Button>
-          <Button style={{ marginLeft: 10 }}>注册</Button>
+          <Button type="primary" onClick={handleLoginClick}>登录</Button>
+          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
         </div>
       </div>
 
@@ -279,95 +262,115 @@ const HomePage = () => {
       <div className={styles.recommendedCoursesList}>
         {courses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
-            <Image className={styles.courseImage} src={course.image} alt={course.name} width={200} height={120} />
-            <div className={styles.courseName}>{course.name}</div>
-            <div className={styles.courseSchool}>{course.school} {course.author}</div>
+            <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
+              alt={course.title} width={200} height={120} />
+            <div className={styles.courseName}>{course.title}</div>
+            <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
               <p>点赞人数：{course.likes}</p>
-              <p>注册人数：{course.registrationCount}</p>
-              <p>发布时间：{course.publishDate}</p>
-              <p>更新时间：{course.updateDate}</p>
+              <p>注册人数：{course.registration_count}</p>
+              <p>发布时间：{course.created_at}</p>
+              <p>更新时间：{course.updated_at}</p>
 
             </div>
           </div>
         ))}
       </div>
 
-      {/* 推荐课程 */}
+      {/* 热门课程 */}
       <div className={styles.recommendedCoursesTitle}>
         <h2>热门课程</h2>
+        <div className={styles.filterControls}>
+          <Select
+            value={sortField}
+            onChange={(value) => setSortField(value)}
+            style={{ width: 200, marginRight: 10 }}
+
+          >
+            <Select.Option value="publishDate">发布时间</Select.Option>
+            <Select.Option value="registrationCount">注册人数</Select.Option>
+            <Select.Option value="updateDate">更新时间</Select.Option>
+            <Select.Option value="likes">点赞人数</Select.Option>
+          </Select>
+
+          <Select
+            value={sortOrder}
+            onChange={(value) => setSortOrder(value)}
+            style={{ width: 120, marginRight: 10 }}
+          >
+            <Select.Option value="ascend">升序</Select.Option>
+            <Select.Option value="descend">降序</Select.Option>
+          </Select>
+
+          <Button type="primary" onClick={handleSort}>
+            排序
+          </Button>
+        </div>
       </div>
       <div className={styles.recommendedCoursesList}>
-        <div className={styles.recommendedCoursesItem}>
-          <Image className={styles.courseImage} src={course1} alt="course" />
-          <div className={styles.courseName}>
-            庄子精讲
-          </div>
-          <div className={styles.courseSchool}>
-            深圳大学
-          </div>
-          <div className={styles.courseAuthor}>
-            王阳明
-          </div>
-        </div>
-        <div className={styles.recommendedCoursesItem}>
-          <Image className={styles.courseImage} src={course2} alt="course" />
-          <div className={styles.courseName}>
-            音乐与健康
-          </div>
-          <div className={styles.courseSchool}>
-            深圳大学
-          </div>
-          <div className={styles.courseAuthor}>
-            王阳明
-          </div>
+        {courses.map((course) => (
+          <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
+            <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
+              alt={course.title} width={200} height={120} />
+            <div className={styles.courseName}>{course.title}</div>
+            <div className={styles.courseSchool}>{course.instructor_name}</div>
+            <div className={styles.courseDetails}>
+              <p>点赞人数：{course.likes}</p>
+              <p>注册人数：{course.registration_count}</p>
+              <p>发布时间：{course.created_at}</p>
+              <p>更新时间：{course.updated_at}</p>
 
-        </div>
-        <div className={styles.recommendedCoursesItem}>
-          <Image className={styles.courseImage} src={course3} alt="course" />
-          <div className={styles.courseName}>
-            谈判技巧
+            </div>
           </div>
-          <div className={styles.courseSchool}>
-            深圳大学
-          </div>
-          <div className={styles.courseAuthor}>
-            王阳明
-          </div>
-        </div>
-        <div className={styles.recommendedCoursesItem}>
-          <Image className={styles.courseImage} src={course4} alt="course" />
-          <div className={styles.courseName}>
-            数字电路
-          </div>
-          <div className={styles.courseSchool}>
-            深圳大学
-          </div>
-          <div className={styles.courseAuthor}>
-            王阳明
-          </div>
-        </div>
-        <div className={styles.recommendedCoursesItem}>
-          <Image className={styles.courseImage} src={course5} alt="course" />
-          <div className={styles.courseName}>
-            线性代数
-          </div>
-          <div className={styles.courseSchool}>
-            深圳大学
-          </div>
-          <div className={styles.courseAuthor}>
-            王阳明
-          </div>
-        </div>
-        <div className={styles.recommendedCoursesItem}>
+        ))}
+      </div>
 
-        </div>
-        <div className={styles.recommendedCoursesItem}>
+      {/* 最新课程 */}
+      <div className={styles.recommendedCoursesTitle}>
+        <h2>最新课程</h2>
+        <div className={styles.filterControls}>
+          <Select
+            value={sortField}
+            onChange={(value) => setSortField(value)}
+            style={{ width: 200, marginRight: 10 }}
 
-        </div>
-        <div className={styles.recommendedCoursesItem}>
+          >
+            <Select.Option value="publishDate">发布时间</Select.Option>
+            <Select.Option value="registrationCount">注册人数</Select.Option>
+            <Select.Option value="updateDate">更新时间</Select.Option>
+            <Select.Option value="likes">点赞人数</Select.Option>
+          </Select>
 
+          <Select
+            value={sortOrder}
+            onChange={(value) => setSortOrder(value)}
+            style={{ width: 120, marginRight: 10 }}
+          >
+            <Select.Option value="ascend">升序</Select.Option>
+            <Select.Option value="descend">降序</Select.Option>
+          </Select>
+
+          <Button type="primary" onClick={handleSort}>
+            排序
+          </Button>
         </div>
+      </div>
+      <div className={styles.recommendedCoursesList}>
+        {courses.map((course) => (
+          <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
+            <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
+              alt={course.title} width={200} height={120} />
+            <div className={styles.courseName}>{course.title}</div>
+            <div className={styles.courseSchool}>{course.instructor_name}</div>
+            <div className={styles.courseDetails}>
+              <p>点赞人数：{course.likes}</p>
+              <p>注册人数：{course.registration_count}</p>
+              <p>发布时间：{course.created_at}</p>
+              <p>更新时间：{course.updated_at}</p>
+
+            </div>
+          </div>
+        ))}
       </div>
 
 

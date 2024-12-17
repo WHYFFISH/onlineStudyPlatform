@@ -207,7 +207,7 @@ export default function StudentDashboard() {
                         <Image className={styles.logoIcon} src={logo} alt="Logo" />
                         在线教育平台
                     </div>
-                    <NavigatorMenu initialCurrent={'alipay'} />
+                    <NavigatorMenu initialCurrent={'personal'} />
                     <div style={{
                         width: '400px',
                         display: 'flex',

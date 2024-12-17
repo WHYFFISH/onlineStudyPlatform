@@ -58,11 +58,13 @@ try {
 | id | INT | 用户ID，主键，自增 |
 | name | VARCHAR(255) | 用户姓名 |
 | email | VARCHAR(255) | 邮箱地址，唯一 |
+| phone | VARCHAR(20) | 手机号，唯一 |
 | password_hash | VARCHAR(255) | 加密后的密码 |
 | role | VARCHAR(50) | 用户角色（学生、教师、系统管理员、游客） |
 | avatar | VARCHAR(255) | 头像URL |
 | status | ENUM | 账号状态(active/inactive/suspended) |
 | created_at | TIMESTAMP | 创建时间 |
+| login_attempts | INT | 登录尝试次数，默认0 |
 
 ## Courses 表（课程表）
 | 字段名 | 类型 | 说明 |

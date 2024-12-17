@@ -13,118 +13,56 @@ import Footer from '../../components/footer/page';
 import { useRouter, useParams } from 'next/navigation'
 import { FacebookOutlined, TwitterOutlined, LinkedinOutlined, GithubOutlined } from '@ant-design/icons';
 import NavigatorMenu from '../../components/navigatorMenu/page';
+import CourseMenu from '../../components/courseMenu/page';
+import CourseDocument from '../../components/courseDocument/page';
+import CommentSection from '../../components/commentSection/page';
+import PersonalNotes from '../../components/personalNote/page';
 
 
 const CoursePage = () => {
   const menuItems = [
     {
-      key: 'sub1',
-      label: 'Navigation One',
-      // icon: <MailOutlined />,
-      children: [
-        {
-          key: 'g1',
-          label: 'Item 1',
-          type: 'group',
-          children: [
-            {
-              key: '1',
-              label: 'Option 1',
-            },
-            {
-              key: '2',
-              label: 'Option 2',
-            },
-          ],
-        },
-        {
-          key: 'g2',
-          label: 'Item 2',
-          type: 'group',
-          children: [
-            {
-              key: '3',
-              label: 'Option 3',
-            },
-            {
-              key: '4',
-              label: 'Option 4',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: 'sub2',
-      label: 'Navigation Two',
-      // icon: <AppstoreOutlined />,
-      children: [
-        {
-          key: '5',
-          label: 'Option 5',
-        },
-        {
-          key: '6',
-          label: 'Option 6',
-        },
-        {
-          key: 'sub3',
-          label: 'Submenu',
-          children: [
-            {
-              key: '7',
-              label: 'Option 7',
-            },
-            {
-              key: '8',
-              label: 'Option 8',
-            },
-          ],
-        },
-      ],
+      key: 'intro',
+      label: '课程简介',
+
     },
     {
       type: 'divider',
     },
     {
-      key: 'sub4',
-      label: 'Navigation Three',
-      // icon: <SettingOutlined />,
-      children: [
-        {
-          key: '9',
-          label: 'Option 9',
-        },
-        {
-          key: '10',
-          label: 'Option 10',
-        },
-        {
-          key: '11',
-          label: 'Option 11',
-        },
-        {
-          key: '12',
-          label: 'Option 12',
-        },
-      ],
+      key: 'menu',
+      label: '课程目录',
+
     },
     {
-      key: 'grp',
-      label: 'Group',
-      type: 'group',
-      children: [
-        {
-          key: '13',
-          label: 'Option 13',
-        },
-        {
-          key: '14',
-          label: 'Option 14',
-        },
-      ],
+      type: 'divider',
+    },
+    {
+      key: 'document',
+      label: '课程文档',
+
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'comment',
+      label: '评论区',
+
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'personalNotes',
+      label: '个人笔记',
+
+    },
+    {
+      type: 'divider',
     },
   ];
+
   const socialMediaStyle = {
     display: 'flex',
     gap: '10px',
@@ -137,48 +75,83 @@ const CoursePage = () => {
       color: 'rgb(229, 90, 0)',  // 添加hover效果
     },
   };
-  const items = [
-    {
-      key: 'course',
-      label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          课程
-        </a>
-      ),
-    },
-    {
-      key: 'school',
-      label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          学校
-        </a>
-      ),
-    },
-    {
-      key: 'teacher',
-      label: '教师'
-    },
-    {
-      key: 'alipay',
-      label: (
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          个人
-        </a>
-      ),
-    },
-  ];
   const { courseId } = useParams();
   console.log(courseId)
-  const [current, setCurrent] = useState('course');
+  // 定义状态来控制选中的菜单项
+  const [selectedMenuItem, setSelectedMenuItem] = useState('intro'); // 默认选中“课程简介”
   const [searchTerm, setSearchTerm] = useState('');
 
-  const onClick = (e) => {
-    console.log('click ', e);
-    setCurrent(e.key);
+  const [course, setCourse] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const fetchCourse = async () => {
+    if (!courseId) return;
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
+      }
+      const data = await response.json();
+      setCourse(data);
+      console.log(data);
+    } catch (err) {
+      message.error('Failed to fetch course');
+    } finally {
+      setLoading(false);
+    }
+  };
+  // 在组件挂载时调用接口
+  useEffect(() => {
+    fetchCourse();
+  }, [courseId]);
+
+  const onClickMenu = (e) => {
+    setSelectedMenuItem(e.key);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  // 点击事件处理，跳转到登录页面
+  const handleLoginClick = () => {
+    router.push("/auth/login");
+  };
+
+  // 点击事件处理，跳转到注册页面
+  const handleRegisterClick = () => {
+    router.push("/auth/register");
+  };
+
+  // 回车事件处理，触发页面跳转
+  const handlePressEnter = () => {
+    if (searchTerm.trim()) {
+      router.push(`/searchPage?keyword=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+  // 根据选中的菜单项来显示不同的内容
+  const menuContent = () => {
+    switch (selectedMenuItem) {
+      case 'intro':
+        return (<p className={styles.courseInfo}>
+          {course.description}这门数字集成电路课程内容丰富，涵盖了Chisel开发环境的搭建、LC-3处理器各模块的设计与实现，以及在FPGA平台上的应用。通过10个实验，从基础知识回顾到实际操作，学生可以深入了解数字电路设计的各个方面。课程的设计报告要求详细，涵盖了需求分析、设计方案、实现过程、测试结果等内容，旨在考察学生的设计思路、技术实现和文档编写能力。实验不仅注重功能实现的正确性和性能，还强调文档质量和展示表现，充分锻炼了学生在工程实践中的综合能力。通过课程的学习，学生能够将理论知识与实际项目结合，提升解决复杂问题的能力。
+        </p>);
+      case 'menu':
+        return <CourseMenu />;
+      case 'document':
+        return <CourseDocument />;
+      case 'comment':
+        return <CommentSection />;
+      case 'personalNotes':
+        return <PersonalNotes />;
+      default:
+        return (<p className={styles.courseInfo}>
+          这门数字集成电路课程内容丰富，涵盖了Chisel开发环境的搭建、LC-3处理器各模块的设计与实现，以及在FPGA平台上的应用。通过10个实验，从基础知识回顾到实际操作，学生可以深入了解数字电路设计的各个方面。课程的设计报告要求详细，涵盖了需求分析、设计方案、实现过程、测试结果等内容，旨在考察学生的设计思路、技术实现和文档编写能力。实验不仅注重功能实现的正确性和性能，还强调文档质量和展示表现，充分锻炼了学生在工程实践中的综合能力。通过课程的学习，学生能够将理论知识与实际项目结合，提升解决复杂问题的能力。
+        </p>);
+    }
   };
 
 
@@ -198,9 +171,10 @@ const CoursePage = () => {
             value={searchTerm}
             onChange={handleSearch}
             style={{ width: 260, marginRight: '60px' }}
+            onPressEnter={handlePressEnter} // 监听回车事件
           />
-          <Button type="primary">登录</Button>
-          <Button style={{ marginLeft: 10 }}>注册</Button>
+          <Button type="primary" onClick={handleLoginClick}>登录</Button>
+          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
         </div>
       </div>
       <div className={styles.content}>
@@ -218,7 +192,7 @@ const CoursePage = () => {
           </Carousel>
         </div>
         <div className={styles.details}>
-          <h2 className={styles.courseTitle}>音乐与健康</h2>
+          <h2 className={styles.courseTitle}>{course.title}</h2>
           <p className={styles.courseSubtitle}>music and health</p>
 
           <div className={styles.courseTag}>
@@ -226,7 +200,8 @@ const CoursePage = () => {
           </div>
 
           <div className={styles.courseSchool}>
-            <strong>宁波大学</strong> / 王蕾 (副教授)
+            <strong>{course.schoolPanel ? course.schoolPanel.name : '深圳大学'}</strong> /
+            {course.teachers && course.teachers.length > 0 ? course.teachers[0].name : '未知教师'}
           </div>
 
           <div className={styles.courseStats}>
@@ -236,11 +211,11 @@ const CoursePage = () => {
             </div>
             <div className={styles.statItem}>
               <p className={styles.statLabel}>开课次数</p>
-              <p className={styles.statValue}>18次</p>
+              <p className={styles.statValue}>{course.likes}次</p>
             </div>
             <div className={styles.statItem}>
               <p className={styles.statLabel}>累计选课</p>
-              <p className={styles.statValue}>20920人</p>
+              <p className={styles.statValue}>{course.registration_count}人</p>
             </div>
           </div>
 
@@ -281,13 +256,27 @@ const CoursePage = () => {
       </div>
 
       <div className={styles.courseDetail}>
-
+        <div className={styles.menu}>
+          <Menu
+            onClick={onClickMenu}
+            style={{
+              width: 240,
+              fontSize: '16px', // 设置菜单项字体大小
+              height: '100%', // 设置菜单高度为100%
+            }}
+            defaultSelectedKeys={['intro']}
+            mode="inline"
+            items={menuItems}
+          />
+        </div>
+        <div className={styles.courseContent}>
+          {menuContent()}
+        </div>
+      </div>
+      <div className={styles.footer}>
+        <Footer></Footer>
       </div>
 
-
-      {/* <div className={styles.footer}>
-        <Footer></Footer>
-      </div> */}
     </div>
   );
 };
