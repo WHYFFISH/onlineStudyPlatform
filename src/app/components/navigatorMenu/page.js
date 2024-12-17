@@ -21,7 +21,7 @@ const NavigatorMenu = ({ initialCurrent }) => {
     {
       key: 'course',
       label: (
-        <a href="/course"  rel="noopener noreferrer">
+        <a href="/searchPage"  rel="noopener noreferrer">
           课程
         </a>
       ),

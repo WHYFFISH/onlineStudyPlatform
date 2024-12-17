@@ -86,6 +86,13 @@ const HomePage = () => {
     setSearchTerm(e.target.value);
   };
 
+  // 回车事件处理，触发页面跳转
+  const handlePressEnter = () => {
+    if (searchTerm.trim()) {
+      router.push(`/searchPage?keyword=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
 
 
   const courseItems = ['全科备考', '择校', '英语'];
@@ -107,6 +114,7 @@ const HomePage = () => {
             value={searchTerm}
             onChange={handleSearch}
             style={{ width: 260, marginRight: '60px' }}
+            onPressEnter={handlePressEnter} // 监听回车事件
           />
           <Button type="primary" onClick={handleLoginClick}>登录</Button>
           <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
