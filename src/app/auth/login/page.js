@@ -32,7 +32,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: values.username, // 账号
+          username: values.username, // 用户名
           password: values.password, // 密码
           role: values.role,         // 登录角色
         }),
@@ -43,9 +43,9 @@ const Login = () => {
       if (response.ok) {
         // 登录成功
         alert("登录成功！");
-        localStorage.setItem("userId", data.user.id); // 记住账号
+        localStorage.setItem("userId", data.user.id); // 记住用户名
         console.log("登录成功，用户ID:", data.user.id);
-        localStorage.setItem("rememberedAccount", values.username); // 记住账号
+        localStorage.setItem("rememberedAccount", values.username); // 记住用户名
         localStorage.setItem("role", data.user.role); // 记住角色
         router.push("/homePage"); // 跳转到主页
       } else {
@@ -72,8 +72,8 @@ const Login = () => {
           onFinish={onFinish}
           method="post"
           initialValues={{
-            username: localStorage.getItem("rememberedAccount") || "", // 自动填充记住的账号
-            remember: true, // 默认勾选记住账号
+            username: localStorage.getItem("rememberedAccount") || "", // 自动填充记住的用户名
+            remember: true, // 默认勾选记住用户名
             role: "student", // 默认角色
           }}
         >
@@ -94,11 +94,11 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item
-            label="账号"
+            label="用户名(姓名或手机号）"
             name="username"
-            rules={[{ required: true, message: "请输入账号" }]}
+            rules={[{ required: true, message: "请输入用户名" }]}
           >
-            <Input placeholder="请输入账号" />
+            <Input placeholder="请输入用户名" />
           </Form.Item>
           <Form.Item
             label="密码"
@@ -114,7 +114,7 @@ const Login = () => {
           </Form.Item>
           <div className={styles.options}>
             <Form.Item name="remember" valuePropName="checked">
-              <Checkbox>记住账号</Checkbox>
+              <Checkbox>记住用户名</Checkbox>
             </Form.Item>
             <a href="/auth/register" className={styles.link}>
               注册/忘记密码？
@@ -123,6 +123,7 @@ const Login = () => {
           <Form.Item
             name="agreement"
             valuePropName="checked"
+            style={{ marginBottom: "25px", marginTop: "-30px" }}
             rules={[
               {
                 validator: (_, value) =>
