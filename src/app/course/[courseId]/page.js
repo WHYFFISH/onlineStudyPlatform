@@ -20,6 +20,19 @@ import PersonalNotes from '../../components/personalNote/page';
 
 
 const CoursePage = () => {
+  const { courseId } = useParams();
+  console.log(courseId)
+  // 定义状态来控制选中的菜单项
+  const [selectedMenuItem, setSelectedMenuItem] = useState('intro'); // 默认选中“课程简介”
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [course, setCourse] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const [userRole, setUserRole] = useState('');
+  const [userName, setUserName] = useState('');
   const menuItems = [
     {
       key: 'intro',
@@ -53,14 +66,18 @@ const CoursePage = () => {
     {
       type: 'divider',
     },
-    {
-      key: 'personalNotes',
-      label: '个人笔记',
-
-    },
-    {
-      type: 'divider',
-    },
+    // 仅在 userRole 为 'student' 时显示
+    ...(userRole === 'student'
+      ? [
+        {
+          key: 'personalNotes',
+          label: '个人笔记',
+        },
+        {
+          type: 'divider',
+        },
+      ]
+      : []),
   ];
 
   const socialMediaStyle = {
@@ -75,16 +92,19 @@ const CoursePage = () => {
       color: 'rgb(229, 90, 0)',  // 添加hover效果
     },
   };
-  const { courseId } = useParams();
-  console.log(courseId)
-  // 定义状态来控制选中的菜单项
-  const [selectedMenuItem, setSelectedMenuItem] = useState('intro'); // 默认选中“课程简介”
-  const [searchTerm, setSearchTerm] = useState('');
 
-  const [course, setCourse] = useState({});
-  const [loading, setLoading] = useState(false);
+  // 在组件挂载时检查 localStorage
+  useEffect(() => {
+    // 获取 localStorage 中的 userId
+    const userRole = localStorage.getItem('role');
+    const userName = localStorage.getItem('rememberedAccount');
 
-  const router = useRouter();
+    // 如果 userId 存在，表示用户已登录
+    if (userRole) {
+      setUserRole(userRole);
+      setUserName(userName);
+    }
+  }, []); // 空数组，表示只在组件挂载时执行一次
 
   const fetchCourse = async () => {
     if (!courseId) return;
@@ -186,7 +206,7 @@ const CoursePage = () => {
       {/* 页首导航 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <Image className={styles.logoIcon} src={logo} alt="Logo" />
+          <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
           在线教育平台
         </div>
         <NavigatorMenu initialCurrent={'school'} />
@@ -207,13 +227,13 @@ const CoursePage = () => {
         <div className={styles.carousel}>
           <Carousel autoplay>
             <div>
-              <Image className={styles.carouselImage} src={course1} alt="carousel1" />
+              <Image className={styles.carouselImage} src={course1} alt="carousel1" priority/>
             </div>
             <div>
-              <Image className={styles.carouselImage} src={course2} alt="carousel1" />
+              <Image className={styles.carouselImage} src={course2} alt="carousel1" priority/>
             </div>
             <div>
-              <Image className={styles.carouselImage} src={course3} alt="carousel1" />
+              <Image className={styles.carouselImage} src={course3} alt="carousel1" priority/>
             </div>
           </Carousel>
         </div>
@@ -252,7 +272,11 @@ const CoursePage = () => {
             </select>
           </div>
           {/* TODO：从session获取用户ID并判断是否已经注册该课程 */}
-          <button className={styles.joinButton} onClick={handleJoinCourse}>加入课程</button>
+
+          {userRole == 'student' ? (
+            <Button className={styles.joinButton} onClick={handleJoinCourse}>加入课程</Button>
+          ) : (<Button className={styles.joinButton} onClick={handleJoinCourse} disabled>加入课程</Button>)
+          }
 
 
           <div className={styles.bottom}>

@@ -166,7 +166,7 @@ const FilesContent = () => {
 
             <div  className={style.sectionBox}>
                
-                <ImageSorter images={initialImages} onOrderChange={handleOrderChange}/>
+                <ImageSorter images={initialImages} onOrderChange={handleOrderChange} priority/>
                 <Upload />
             </div>
 

@@ -211,7 +211,7 @@ export default function StudentDashboard() {
                 {/* 页首导航 */}
                 <div className={styles.header}>
                     <div className={styles.logo}>
-                        <Image className={styles.logoIcon} src={logo} alt="Logo" />
+                        <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
                         在线教育平台
                     </div>
                     <NavigatorMenu initialCurrent={'personal'} />

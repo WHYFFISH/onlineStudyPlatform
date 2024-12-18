@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Spin, Typography, Tag, Select, Carousel, Menu, Card, Row, Col, Button, Input, Badge, notification, List, Divider } from 'antd';
 const { Title, Paragraph } = Typography;
 import { CheckCircleOutlined } from "@ant-design/icons";
@@ -7,14 +7,14 @@ import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/i
 import Link from 'next/link';
 import styles from "./page.module.css";
 import logo from "../../assets/homePage/logo.png"
-import carousel1 from "../../assets/homePage/carousel1.png"
-import carousel2 from "../../assets/homePage/carousel2.png"
-import carousel3 from "../../assets/homePage/carousel3.png"
-import course1 from "../../assets/homePage/course1.png"
-import course2 from "../../assets/homePage/course2.png"
-import course3 from "../../assets/homePage/course3.png"
-import course4 from "../../assets/homePage/course4.webp"
-import course5 from "../../assets/homePage/course5.webp"
+// import carousel1 from "../../assets/homePage/carousel1.png"
+// import carousel2 from "../../assets/homePage/carousel2.png"
+// import carousel3 from "../../assets/homePage/carousel3.png"
+// import course1 from "../../assets/homePage/course1.png"
+// import course2 from "../../assets/homePage/course2.png"
+// import course3 from "../../assets/homePage/course3.png"
+// import course4 from "../../assets/homePage/course4.webp"
+// import course5 from "../../assets/homePage/course5.webp"
 import searchType from "../../assets/homePage/searchType.png"
 import Image from 'next/image';
 import Footer from '../components/footer/page';
@@ -127,7 +127,7 @@ const SearchPage = () => {
       {/* 页首导航 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <Image className={styles.logoIcon} src={logo} alt="Logo" />
+          <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
@@ -147,7 +147,7 @@ const SearchPage = () => {
       </div>
 
       <div className={styles.typeContent}>
-        <Image className={styles.searchType} src={searchType} alt="searchType" />
+        <Image className={styles.searchType} src={searchType} alt="searchType" priority/>
       </div>
       <div className={styles.courseList}>
         <div className={styles.recommendedCoursesTitle}>
