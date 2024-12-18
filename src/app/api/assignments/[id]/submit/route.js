@@ -5,12 +5,11 @@ import { uploadFile } from '@/app/utils/oss';
 export async function POST(request, { params }) {
     try {
         const id = params.id;
-        const userId = '1'; // 临时硬编码用户ID
 
         const formData = await request.formData();
         const content = formData.get('content');
         const files = formData.getAll('files'); // 获取所有文件
-
+        const userId = formData.get('userId');
         const uploadedFiles = [];
 
         // 处理文件上传

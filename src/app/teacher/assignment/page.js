@@ -47,7 +47,11 @@ export default function AssignmentDetail() {
         const fetchAssignmentDetail = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/assignments/${params.id}`);
+                const response = await fetch(`/api/assignments/${params.id}`, {
+                    headers: {
+                        'userId': localStorage.getItem("userId")
+                    }
+                });
                 if (!response.ok) throw new Error('获取作业详情失败');
                 const data = await response.json();
                 setAssignment(data);
@@ -123,6 +127,7 @@ export default function AssignmentDetail() {
                     formData.append('files', file.originFileObj);
                 }
             }
+            formData.append('userId', localStorage.getItem("userId"));
 
             const response = await fetch(`/api/assignments/${params.id}/submit`, {
                 method: 'POST',

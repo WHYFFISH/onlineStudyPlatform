@@ -26,7 +26,7 @@ const ProfileCard = () => {
       setUserName(userName);
     }
   }, []); // 空数组，表示只在组件挂载时执行一次
-  
+
   return (
     <Card className={styles.profileCard}>
       <div className={styles.profileContent}>

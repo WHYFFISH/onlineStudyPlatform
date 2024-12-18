@@ -3,8 +3,7 @@ import { query } from '@/app/utils/db';
 
 export async function GET(request) {
     try {
-        // 从session或token中获取用户ID（这里暂时使用硬编码的用户ID）
-        const userId = 1;
+        const userId = request.headers.get('userId');
 
         // 获取与用户相关的讨论（用户参与的课程的讨论）
         const discussions = await query(`

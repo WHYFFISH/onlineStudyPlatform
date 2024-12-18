@@ -3,8 +3,9 @@ import { query } from '@/app/utils/db';
 
 export async function GET(request, { params }) {
     try {
-        // 等待动态路由参数
-        const id = await params.id;
+        const userId = request.headers.get('userId');
+        const { id } = await params;
+
         if (!id) {
             return NextResponse.json(
                 { error: '课程ID是必需的' },
@@ -13,7 +14,6 @@ export async function GET(request, { params }) {
         }
 
         const courseId = parseInt(id);
-        const userId = 1; // TODO: 从session获取用户ID
 
         // 获取课程基本信息和教师信息
         const [course] = await query(`

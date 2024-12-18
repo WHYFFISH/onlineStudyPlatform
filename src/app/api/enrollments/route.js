@@ -3,8 +3,7 @@ import { query } from '@/app/utils/db';
 
 export async function POST(request) {
     try {
-        const { courseId } = await request.json();
-        const userId = 2; // TODO: 从session获取用户ID
+        const { courseId, userId } = await request.json();
 
         // 检查是否已经注册
         const [existing] = await query(

@@ -1,12 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
     Box,
-    AppBar,
-    Toolbar,
     Typography,
-    IconButton,
     Avatar,
     Container,
     Grid,
@@ -19,12 +16,9 @@ import {
     TableHead,
     TableRow,
     CssBaseline,
-    Divider,
     CardMedia,
     CardContent,
     Button,
-    MenuItem,
-    Menu,
     Input,
 } from '@mui/material';
 import {
@@ -36,7 +30,6 @@ import {
     Timeline,
     AccessTime,
     PlayCircleOutline,
-    SearchOutlined,
 } from '@mui/icons-material';
 import styles from "./page.module.css";
 import TaskList from '../components/student/TaskList';
@@ -45,7 +38,9 @@ import ToolBox from '../components/student/ToolBox';
 import Image from 'next/image';
 import logo from "../../assets/homePage/logo.png";
 import NavigatorMenu from '../components/navigatorMenu/page';
+import Link from 'next/link';  // 确保添加这个导入
 import { useRouter } from 'next/navigation';
+import { uploadFile } from '@/app/utils/oss';
 
 // 创建亮色主题
 const theme = createTheme({
@@ -71,16 +66,14 @@ export default function StudentDashboard() {
     const [courseProgress, setCourseProgress] = useState([]);
     const [deadlines, setDeadlines] = useState([]);
     const [currentTool, setCurrentTool] = useState('dashboard');
-
+    const [studentName, setStudentName] = useState('张三');
     const [studentId, setStudentId] = useState('20221500'); // 初始学号
     const [signature, setSignature] = useState('勤学好问，知行合一'); // 初始签名
     const [avatar, setAvatar] = useState(null); // 头像上传
-
+    const [userRole, setUserRole] = useState('');
     const [stats, setStats] = useState({
         totalCourses: 0,
         totalHours: 0,
-        avgProgress: 0,
-        completedCourses: 0
     });
     const [discussions, setDiscussions] = useState([]);
     const [discussionStats, setDiscussionStats] = useState({
@@ -90,19 +83,59 @@ export default function StudentDashboard() {
     });
     const router = useRouter();
 
+    const [isUploading, setIsUploading] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState('');
+
     useEffect(() => {
+        fetchStudentInfo();
         fetchMyCourses();
         fetchTasks();
         fetchStudyStats();
         fetchDiscussions();
         fetchDiscussionStats();
     }, []);
+    // 在组件挂载时检查 localStorage
+    React.useEffect(() => {
+        // 获取 localStorage 中的 userId
+        const userRole = localStorage.getItem('role');
+        const userName = localStorage.getItem('rememberedAccount');
 
+        // 如果 userId 存在，表示用户已登录
+        if (userRole) {
+            setUserRole(userRole);
+            // setUserName(userName);
+        }
+    }, []); // 空数组，表示只在组件挂载时执行一次
 
+    const fetchStudentInfo = async () => {
+        try {
+            const response = await fetch('/api/student-info', {
+                headers: { 'userId': localStorage.getItem("userId") }
+            });
+            const data = await response.json();
+            console.log('获取到的学生信息:', data);  // 调试日志
+
+            // 直接使用返回的avatarUrl
+            if (data.avatarUrl) {
+                setAvatarUrl(data.avatarUrl);
+                console.log('设置头像URL:', data.avatarUrl);
+            }
+
+            setStudentName(data.name);
+            setStudentId(data.student_number);
+            setSignature(data.signature);
+        } catch (error) {
+            console.error('获取学生信息失败:', error);
+        }
+    };
 
     const fetchMyCourses = async () => {
         try {
-            const response = await fetch('/api/enrollments/my-courses');
+            const response = await fetch('/api/enrollments/my-courses', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取课程失败');
             }
@@ -118,11 +151,16 @@ export default function StudentDashboard() {
 
     const fetchTasks = async () => {
         try {
-            const response = await fetch('/api/tasks/pending');
+            const response = await fetch('/api/tasks/pending', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取任务失败');
             }
             const data = await response.json();
+            console.log(data);
             setTasks(data.tasks || []);
         } catch (err) {
             console.error('获取任务失败:', err);
@@ -132,7 +170,11 @@ export default function StudentDashboard() {
 
     const fetchStudyStats = async () => {
         try {
-            const response = await fetch('/api/study-stats');
+            const response = await fetch('/api/study-stats', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取学习统计失败');
             }
@@ -148,7 +190,11 @@ export default function StudentDashboard() {
 
     const fetchDiscussions = async () => {
         try {
-            const response = await fetch('/api/discussions/recent');
+            const response = await fetch('/api/discussions/recent', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取讨论失败');
             }
@@ -162,7 +208,11 @@ export default function StudentDashboard() {
 
     const fetchDiscussionStats = async () => {
         try {
-            const response = await fetch('/api/discussions/stats');
+            const response = await fetch('/api/discussions/stats', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取讨论统计失败');
             }
@@ -181,12 +231,21 @@ export default function StudentDashboard() {
     const updateStudyTime = async (courseId) => {
         try {
             const response = await fetch(`/api/courses/${courseId}/study`, {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: localStorage.getItem("userId")
+                })
             });
 
             if (!response.ok) {
                 throw new Error('更新学习时间失败');
             }
+
+            const result = await response.json();
+            console.log('更新学习时间成功:', result);
 
             // 更新本地课程数据
             setCourses(prevCourses => prevCourses.map(course => {
@@ -204,6 +263,72 @@ export default function StudentDashboard() {
         }
     };
 
+    const handleAvatarUpload = async (event) => {
+        try {
+            setIsUploading(true);
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 文件验证
+            if (!file.type.startsWith('image/')) {
+                alert('请上传图片文件');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('图片大小不能超过5MB');
+                return;
+            }
+
+            // 上传到OSS
+            console.log('开始上传到OSS');
+            const result = await uploadFile(file, 'avatars');
+            console.log('OSS上传结果:', result);
+
+            if (!result.path) {
+                throw new Error('获取文件路径失败');
+            }
+
+            // 更新数据库
+            const response = await fetch('/api/student-info/avatar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'userId': localStorage.getItem("userId")
+                },
+                body: JSON.stringify({
+                    avatar: result.path
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '更新头像失败');
+            }
+
+            const data = await response.json();
+            console.log('更新头像成功:', data);
+
+            // 刷新学生信息以获取新的头像URL
+            await fetchStudentInfo();
+
+            alert('头像更新成功');
+
+        } catch (error) {
+            console.error('头像上传失败:', error);
+            alert(error.message || '头像上传失败，请重试');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+    // 点击事件处理，跳转到登录页面
+    const handleLoginClick = () => {
+        router.push("/auth/login");
+    };
+
+    // 点击事件处理，跳转到注册页面
+    const handleRegisterClick = () => {
+        router.push("/auth/register");
+    };
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -211,34 +336,27 @@ export default function StudentDashboard() {
                 {/* 页首导航 */}
                 <div className={styles.header}>
                     <div className={styles.logo}>
-                        <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
+                        <Image className={styles.logoIcon} src={logo} alt="Logo" priority />
                         在线教育平台
                     </div>
                     <NavigatorMenu initialCurrent={'personal'} />
-                    <div style={{
-                        width: '400px',
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                        paddingRight: '24px'  // 添加一些右侧padding
-                    }}>
-                        <Button
-                            variant="outlined"
-                            startIcon={<Avatar sx={{ width: 24, height: 24 }} />}
-                            onClick={() => router.push('/student/')}
-                            sx={{
-                                color: 'black',
-                                borderColor: 'rgba(0, 0, 0, 0.23)',
-                                '&:hover': {
-                                    borderColor: 'rgba(0, 0, 0, 0.87)',
-                                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                },
-                                textTransform: 'none',  // 防止文字自动大写
-                                fontFamily: '"Microsoft YaHei", "微软雅黑", sans-serif'
-                            }}
-                        >
-                            个人中心
-                        </Button>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {!userRole ? (
+                            <div>
+                                <Button type="primary" onClick={handleLoginClick}>登录</Button>
+                                <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+                            </div>
+                        ) : (
+                            <Button
+                                onClick={() => {
+                                    localStorage.clear();
+                                    router.push('/');
+                                }}
+                                style={{ marginLeft: 60 }}
+                            >
+                                退出登录
+                            </Button>
+                        )}
                     </div>
                 </div>
                 {/* 个人信息概览 */}
@@ -294,29 +412,27 @@ export default function StudentDashboard() {
                                 {/* 头像区域 */}
                                 <Box sx={{ position: 'relative' }}>
                                     <Avatar
-                                        src={avatar || '/default-avatar.png'} // 显示上传后的头像或默认头像
+                                        src={avatarUrl || '/default-avatar.png'}
+                                        alt={studentName}
                                         sx={{
-                                            width: 96,
-                                            height: 96,
-                                            border: '2px solid white',
-                                            cursor: 'pointer'
+                                            width: 100,
+                                            height: 100,
+                                            mb: 2
                                         }}
                                     />
                                     <Box sx={{ mt: 1 }}>
-                                        <Button variant="contained" size="small" component="label">
-                                            上传新头像
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            component="label"
+                                            disabled={isUploading}
+                                        >
+                                            {isUploading ? '上传中...' : '上传新头像'}
                                             <input
                                                 type="file"
                                                 hidden
                                                 accept="image/*"
-                                                onChange={(e) => {
-                                                    const file = e.target.files[0];
-                                                    if (file) {
-                                                        const reader = new FileReader();
-                                                        reader.onloadend = () => setAvatar(reader.result);
-                                                        reader.readAsDataURL(file);
-                                                    }
-                                                }}
+                                                onChange={handleAvatarUpload}
                                             />
                                         </Button>
                                     </Box>
@@ -325,7 +441,7 @@ export default function StudentDashboard() {
                                 {/* 学号、签名和用户名 */}
                                 <Box>
                                     <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                                        张三
+                                        {studentName}
                                     </Typography>
 
                                     {/* 学号（不可修改） */}
@@ -478,7 +594,7 @@ export default function StudentDashboard() {
                                                 <CardMedia
                                                     component="img"
                                                     sx={{ height: 240 }}
-                                                    image={course.thumbnail || '/default-course.jpg'}
+                                                    image={course.thumbnail || '/imageView.png'}
                                                     alt={course.title}
                                                 />
                                                 <CardContent>
@@ -535,17 +651,15 @@ export default function StudentDashboard() {
                                                         <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: '60%' }}>
                                                             下一课：{course.nextLesson || '暂无'}
                                                         </Typography>
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            startIcon={<PlayCircleOutline />}
-                                                            onClick={async () => {
-                                                                await updateStudyTime(course.id);
-                                                                window.open(`/student/course/${course.id}`, '_blank');
-                                                            }}
-                                                        >
-                                                            继续学习
-                                                        </Button>
+                                                        <Link href={`/student/course/${course.id}`} target="_blank">
+                                                            <Button
+                                                                size="small"
+                                                                variant="contained"
+                                                                startIcon={<PlayCircleOutline />}
+                                                            >
+                                                                继续学习
+                                                            </Button>
+                                                        </Link>
                                                     </Box>
                                                 </CardContent>
                                             </Card>
@@ -604,12 +718,13 @@ export default function StudentDashboard() {
                                                             <Typography variant="body2" color="text.secondary">
                                                                 {discussion.reply_count} 回复
                                                             </Typography>
-                                                            <Button
-                                                                size="small"
-                                                                onClick={() => router.push(`/student/discussion/${discussion.id}`)}
-                                                            >
-                                                                查看详情
-                                                            </Button>
+                                                            <Link href={`/student/discussion/${discussion.id}`} target="_blank">
+                                                                <Button
+                                                                    size="small"
+                                                                >
+                                                                    查看详情
+                                                                </Button>
+                                                            </Link>
                                                         </Box>
                                                     </Box>
                                                 ))}
@@ -709,13 +824,14 @@ export default function StudentDashboard() {
                                                                     </TableCell>
                                                                     <TableCell align="right">
                                                                         {new Date(task.deadline) > new Date() ? (
-                                                                            <Button
-                                                                                size="small"
-                                                                                variant="contained"
-                                                                                onClick={() => router.push(`/student/assignment/${task.id}`)}
-                                                                            >
-                                                                                开始
-                                                                            </Button>
+                                                                            <Link href={`/student/assignment/${task.id}`} target="_blank">
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    variant="contained"
+                                                                                >
+                                                                                    开始
+                                                                                </Button>
+                                                                            </Link>
                                                                         ) : (
                                                                             <Typography
                                                                                 variant="body2"
@@ -862,7 +978,7 @@ export default function StudentDashboard() {
                                             { id: 1, title: 'Java基础语法', date: '2024-05-01', content: '学习了Java变量、数据类型、流程控制等基础内容。' },
                                             { id: 2, title: 'Python文件操作', date: '2024-05-02', content: '学习了如何读取和写入文件，以及with语句的用法。' },
                                             { id: 3, title: 'React组件化开发', date: '2024-05-03', content: 'React的组件生命周期、Hooks的使用和props传参。' },
-                                            { id: 4, title: '数据结构：链表', date: '2024-05-04', content: '掌握了单链表和双向链表的原理与实现。' },
+                                            { id: 4, title: '数据结构：链表', date: '2024-05-04', content: '掌握了单链表和双向链表的原理��实现。' },
                                             { id: 5, title: '算法：排序算法', date: '2024-05-05', content: '理解冒泡排序、选择排序和快速排序的实现及复杂度。' },
                                             { id: 6, title: 'Vue 3响应式原理', date: '2024-05-06', content: '学习了Vue 3中响应式数据的实现原理和Proxy用法。' },
                                             { id: 7, title: '数据库设计规范', date: '2024-05-07', content: '数据库三范式、主键与外键约束的设计方法。' },
@@ -977,14 +1093,15 @@ export default function StudentDashboard() {
                                                         <Typography variant="body2" color="primary">
                                                             {item.likes} 收藏
                                                         </Typography>
-                                                        <Button
-                                                            size="small"
-                                                            variant="outlined"
-                                                            color="primary"
-                                                            onClick={() => alert(`查看课程：${item.title}`)}
-                                                        >
-                                                            查看详情
-                                                        </Button>
+                                                        <Link href={`/student/course/${item.id}`} target="_blank">
+                                                            <Button
+                                                                size="small"
+                                                                variant="outlined"
+                                                                color="primary"
+                                                            >
+                                                                查看详情
+                                                            </Button>
+                                                        </Link>
                                                     </Box>
                                                 </Box>
                                             </Card>

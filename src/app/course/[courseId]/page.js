@@ -109,8 +109,13 @@ const CoursePage = () => {
   const fetchCourse = async () => {
     if (!courseId) return;
     setLoading(true);
+    const userId = localStorage.getItem("userId");
     try {
-      const response = await fetch(`/api/courses/${courseId}`);
+      const response = await fetch(`/api/courses/${courseId}`, {
+        headers: {
+          'userId': userId
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch courses');
       }
@@ -182,9 +187,9 @@ const CoursePage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ courseId: courseId }), // 发送课程ID
-        // TODO：从session获取用户ID
-        // body: JSON.stringify({ userId: userId, courseId: courseId }),
+        // body: JSON.stringify({ courseId: courseId }), // 发送课程ID
+        // TODO：从session获取用户ID ID存在localStorage.setItem("userId", data.user.id);
+        body: JSON.stringify({ userId: localStorage.getItem("userId"), courseId: courseId }),
       });
 
       if (!response.ok) {
