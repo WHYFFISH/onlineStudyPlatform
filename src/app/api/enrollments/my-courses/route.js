@@ -3,9 +3,7 @@ import { query } from '@/app/utils/db';
 
 export async function GET(request) {
     try {
-        // TODO: 从session或token中获取用户ID
-        const userId = 1; // 临时硬编码，实际应该从认证中获取
-
+        const userId = request.headers.get('userId');
         const courses = await query(`
             SELECT DISTINCT
                 c.id,

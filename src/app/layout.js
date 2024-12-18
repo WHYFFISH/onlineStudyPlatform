@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,15 +23,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      {/* <Head> */}
-        {/* 引入外部脚本 */}
-        <script
-          type="text/javascript"
-          charSet="utf-8"
-          src="https://static.alicaptcha.com/v4/ct4.js"
-          async
-        />
-      {/* </Head> */}
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

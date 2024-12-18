@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/app/utils/db';
 
-export async function GET() {
+export async function GET(request) {
     try {
-        const userId = 1; // TODO: 从session获取用户ID
+        const userId = request.headers.get('userId');
 
         // 添加调试日志
         console.log('Fetching study stats for user:', userId);

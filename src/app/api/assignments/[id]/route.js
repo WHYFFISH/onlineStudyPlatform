@@ -3,8 +3,8 @@ import { query } from '@/app/utils/db';
 
 export async function GET(request, { params }) {
     try {
-        const id = params.id;
-        const userId = '1';
+        const userId = request.headers.get('userId');
+        const { id } = await params;
 
         const assignments = await query(
             `SELECT a.*, 

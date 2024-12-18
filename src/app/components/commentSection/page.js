@@ -1,4 +1,5 @@
 // components/CommentSection.js
+"use client"
 import React, { useState } from 'react';
 import { List, Avatar, Button, Input, Space, Checkbox, Typography, Select } from 'antd';
 import { MessageOutlined, SearchOutlined } from '@ant-design/icons';

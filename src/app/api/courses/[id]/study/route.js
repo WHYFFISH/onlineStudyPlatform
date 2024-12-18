@@ -3,10 +3,19 @@ import { query } from '@/app/utils/db';
 
 export async function POST(request, { params }) {
     try {
-        // 等待动态路由参数
-        const id = await params.id;
+        const { id } = params;
         const courseId = parseInt(id);
-        const userId = 1; // TODO: 从session获取用户ID
+
+        // 解析请求体
+        const data = await request.json();
+        const userId = data.userId;
+
+        if (!courseId || !userId) {
+            return NextResponse.json(
+                { error: '课程ID和用户ID是必需的' },
+                { status: 400 }
+            );
+        }
 
         // 更新上次学习时间
         await query(

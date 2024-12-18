@@ -51,7 +51,7 @@ const App = () => {
 
       <div className={style.header}>
         <div className={style.logo}>
-          <Image className={style.logoIcon} src={logo} alt="Logo" />
+          <Image className={style.logoIcon} src={logo} alt="Logo" priority/>
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}

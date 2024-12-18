@@ -404,7 +404,7 @@ export default function TeacherDetailsPage() {
 
             <div className={styles.header}>
                 <div className={styles.logo}>
-                    <Image className={styles.logoIcon} src={logo} alt="Logo"/>
+                    <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
                     在线教育平台
                 </div>
                 {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
@@ -419,6 +419,7 @@ export default function TeacherDetailsPage() {
                     src={whyAvatar}
                     alt="教师头像"
                     className={styles.avatar}
+                    priority
                 />
 
                 <div className={styles.info}>

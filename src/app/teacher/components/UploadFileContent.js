@@ -15,7 +15,7 @@ const FilesContent = () => {
   return (
     <div >
       <h1 className={style.centertitle}>相关文件上传</h1>
-      <ImageSorter images={initialImages} onOrderChange={handleOrderChange} />
+      <ImageSorter images={initialImages} onOrderChange={handleOrderChange} priority/>
         <Upload/>
     </div>
     

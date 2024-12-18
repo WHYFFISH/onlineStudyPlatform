@@ -7,11 +7,9 @@ export async function GET(request) {
         const page = parseInt(searchParams.get('page')) || 1;
         const limit = parseInt(searchParams.get('limit')) || 5;
         const offset = (page - 1) * limit;
+        const userId = request.headers.get('userId');
 
-        // TODO: 从session获取用户ID
-        const userId = 1;
-
-        // 获取待完成的作业
+        // 获取已报名课程的作业
         const assignments = await query(`
             SELECT 
                 'assignment' as type,
@@ -24,16 +22,19 @@ export async function GET(request) {
                 CASE WHEN s.id IS NOT NULL THEN TRUE ELSE FALSE END as completed
             FROM assignments a
             JOIN courses c ON a.course_id = c.id
+            JOIN enrollments e ON c.id = e.course_id
             LEFT JOIN assignmentsubmissions s ON a.id = s.assignment_id AND s.user_id = ?
-            WHERE (s.id IS NULL AND a.deadline > NOW())  -- 未完成且未过期的作业
-               OR s.id IS NOT NULL  -- 已完成的作业
+            WHERE e.user_id = ?
+            AND (
+                (s.id IS NULL AND a.deadline > NOW())
+                OR s.id IS NOT NULL
+            )
             ORDER BY 
-                CASE WHEN s.id IS NULL THEN 0 ELSE 1 END,  -- 未完成的排在前面
+                CASE WHEN s.id IS NULL THEN 0 ELSE 1 END,
                 a.deadline ASC
-            LIMIT ? OFFSET ?
-        `, [userId, limit, offset]);
+        `, [userId, userId]);
 
-        // 获取未完成的学习资源
+        // 获取已报名课程的未完成学习资源
         const resources = await query(`
             SELECT 
                 r.type,
@@ -49,10 +50,9 @@ export async function GET(request) {
             LEFT JOIN learningprogress lp ON r.id = lp.resource_id AND lp.user_id = ?
             WHERE e.user_id = ?
             AND (lp.completed IS NULL OR lp.completed = FALSE)
-            LIMIT ? OFFSET ?
-        `, [userId, userId, limit, offset]);
+        `, [userId, userId]);
 
-        // 获取未完成的练习
+        // 获取已报名课程的未完成练习
         const exercises = await query(`
             SELECT 
                 'exercise' as type,
@@ -68,34 +68,22 @@ export async function GET(request) {
             LEFT JOIN exerciseattempts ea ON ex.id = ea.exercise_id AND ea.user_id = ?
             WHERE e.user_id = ?
             AND ea.id IS NULL
-            LIMIT ? OFFSET ?
-        `, [userId, userId, limit, offset]);
+        `, [userId, userId]);
 
         // 合并所有任务并按截止日期排序
         const allTasks = [...assignments, ...resources, ...exercises]
             .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 
-        // 获取总数
-        const [{ total }] = await query(`
-            SELECT COUNT(*) as total
-            FROM (
-                SELECT a.id FROM assignments a
-                WHERE a.deadline > NOW()
-                UNION ALL
-                SELECT r.id FROM resources r
-                WHERE r.id NOT IN (SELECT resource_id FROM learningprogress WHERE completed = TRUE)
-                UNION ALL
-                SELECT ex.id FROM exercises ex
-                WHERE ex.id NOT IN (SELECT exercise_id FROM exerciseattempts)
-            ) as all_tasks
-        `);
+        // 应用分页
+        const paginatedTasks = allTasks.slice(offset, offset + limit);
 
         return NextResponse.json({
             tasks: allTasks,
             total: allTasks.length,
-            page: parseInt(page),
+            page: page,
             totalPages: Math.ceil(allTasks.length / limit)
         });
+
     } catch (error) {
         console.error('获取待完成任务失败:', error);
         return NextResponse.json(

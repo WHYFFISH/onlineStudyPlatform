@@ -1,6 +1,6 @@
 "use client"
 import { Select, Carousel, Menu, Card, Row, Col, Button, Input, Badge, notification, List, Divider } from 'antd';
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import styles from "./page.module.css";
@@ -29,6 +29,7 @@ const HomePage = () => {
   const [sortField, setSortField] = useState('publishDate');
   const [sortOrder, setSortOrder] = useState('ascend');
   const router = useRouter();
+  const [userRole, setUserRole] = useState('');
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -47,10 +48,20 @@ const HomePage = () => {
     }
   };
 
-  // 在组件挂载时调用接口
-  useEffect(() => {
+  // 在组件挂载时检查 localStorage
+  React.useEffect(() => {
     fetchCourses();
-  }, []);
+    // 获取 localStorage 中的 userId
+    const userRole = localStorage.getItem('role');
+    const userName = localStorage.getItem('rememberedAccount');
+
+    // 如果 userId 存在，表示用户已登录
+    if (userRole) {
+      setUserRole(userRole);
+      // setUserName(userName);
+    }
+  }, []); // 空数组，表示只在组件挂载时执行一次
+
   useEffect(() => {
     // 对 courses 按照 registration_count 进行降序排序
     const sortedCourses = [...courses].sort((a, b) => b.registration_count - a.registration_count);
@@ -109,7 +120,7 @@ const HomePage = () => {
       {/* 页首导航 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <Image className={styles.logoIcon} src={logo} alt="Logo" />
+          <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
@@ -123,8 +134,12 @@ const HomePage = () => {
             style={{ width: 260, marginRight: '60px' }}
             onPressEnter={handlePressEnter} // 监听回车事件
           />
-          <Button type="primary" onClick={handleLoginClick}>登录</Button>
-          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+          {!userRole && (
+            <div>
+              <Button type="primary" onClick={handleLoginClick}>登录</Button>
+              <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -219,13 +234,13 @@ const HomePage = () => {
         <div className={styles.carousel}>
           <Carousel autoplay>
             <div>
-              <Image className={styles.carouselImage} src={carousel1} alt="carousel1" />
+              <Image className={styles.carouselImage} src={carousel1} alt="carousel1" priority/>
             </div>
             <div>
-              <Image className={styles.carouselImage} src={carousel2} alt="carousel1" />
+              <Image className={styles.carouselImage} src={carousel2} alt="carousel1" priority/>
             </div>
             <div>
-              <Image className={styles.carouselImage} src={carousel3} alt="carousel1" />
+              <Image className={styles.carouselImage} src={carousel3} alt="carousel1" priority/>
             </div>
           </Carousel>
         </div>
@@ -270,7 +285,7 @@ const HomePage = () => {
         {courses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} />
+              alt={course.title} width={200} height={120} priority/>
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
@@ -293,7 +308,7 @@ const HomePage = () => {
         {hotCourses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} />
+              alt={course.title} width={200} height={120} priority/>
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
@@ -315,7 +330,7 @@ const HomePage = () => {
         {courses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} />
+              alt={course.title} width={200} height={120} priority/>
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
