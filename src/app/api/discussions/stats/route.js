@@ -3,7 +3,7 @@ import { query } from '@/app/utils/db';
 
 export async function GET(request) {
     try {
-        const userId = 1; // 暂时硬编码用户ID
+        const userId = request.headers.get('userId');
 
         // 获取用户的讨论统计
         const stats = await query(`

@@ -128,6 +128,7 @@ const App = () => {
                         afterOpenChange: (visible) => !visible && setPreviewImage(''),
                     }}
                     src={previewImage}
+                    priority
                 />
             )}
         </>

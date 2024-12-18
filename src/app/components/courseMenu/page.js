@@ -1,6 +1,6 @@
-import { FacebookOutlined, TwitterOutlined, LinkedinOutlined, GithubOutlined } from '@ant-design/icons';
+"use client"
 import { Menu } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const CourseMenu = () => {
   const items = [

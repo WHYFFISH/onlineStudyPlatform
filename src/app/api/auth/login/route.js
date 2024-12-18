@@ -19,24 +19,24 @@ export async function POST(request) {
 
         if (users.length === 0) {
             return NextResponse.json(
-                { error: '账号不存在或角色不匹配' },
+                { error: '用户名不存在或角色不匹配' },
                 { status: 401 }
             );
         }
 
         const user = users[0];
 
-        // 2. 检查账号状态
+        // 2. 检查用户名状态
         if (user.status === 'suspended') {
             return NextResponse.json(
-                { error: '账号已被冻结，请联系管理员' },
+                { error: '用户名已被冻结，请联系管理员' },
                 { status: 401 }
             );
         }
 
         if (user.status === 'inactive') {
             return NextResponse.json(
-                { error: '账号未激活，请先激活账号' },
+                { error: '用户名未激活，请先激活用户名' },
                 { status: 401 }
             );
         }
@@ -50,7 +50,7 @@ export async function POST(request) {
             );
 
             return NextResponse.json(
-                { error: '登录尝试次数过多，账号已被冻结，请联系管理员' },
+                { error: '登录尝试次数过多，用户名已被冻结，请联系管理员' },
                 { status: 401 }
             );
         }

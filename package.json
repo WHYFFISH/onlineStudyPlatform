@@ -17,6 +17,7 @@
     "ali-oss": "^6.22.0",
     "antd": "^5.22.5",
     "bcryptjs": "^2.4.3",
+    "browser-image-compression": "^2.0.2",
     "date-fns": "^4.1.0",
     "graceful-fs": "^4.2.11",
     "idb": "^8.0.1",

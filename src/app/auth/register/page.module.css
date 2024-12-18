@@ -1,48 +1,70 @@
-/* 页面背景 */
+/* 页面背景，使用图片 */
 .pageBackground {
     margin: 0;
     padding: 0;
     width: 100vw;
     height: 100vh;
-    background-color:  #f0f2f5;
+    background-image: url('/background.png'); /* 替换为图片路径 */
+    background-size: cover; /* 背景图片覆盖整个页面 */
+    background-position: center; /* 居中显示背景图片 */
+    background-repeat: no-repeat; /* 防止背景重复 */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end; /* 水平靠右 */
+    align-items: center; /* 垂直居中 */
     font-family: Arial, sans-serif;
 }
 
 /* 注册模块容器 */
 .container {
-    max-width: 400px;
-    width: 100%;
-    padding: 40px;
-    background-color: #fff;
+    width: 400px;
+    padding: 8px 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
     border: 1px solid #e0e0e0;
     border-radius: 12px; /* 圆角 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
-    animation: fadeIn 0.8s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    animation: fadeIn 0.8s ease-in-out; /* 渐入动画 */
+    margin-right: 150px; /* 距离页面右侧的间距 */
+    box-sizing: border-box;
 }
 
 /* 标题样式 */
 .title {
     text-align: center;
-    margin-bottom: 24px;
+    margin-top:0;
+    margin-bottom: 15px;
     font-size: 24px;
     font-weight: bold;
     color: #333;
 }
 
-/* 表单样式 */
-.form .ant-form-item {
-    margin-bottom: 16px;
+/* 统一调整表单项之间的行距 */
+.form :global(.ant-form-item) {
+    margin-bottom: 5px; /* 调整行距，原始是16px，这里改为12px */
 }
 
-.form .ant-input {
-    height: 40px;
+/* 确认密码框与按钮的间距 */
+.form :global(.ant-form-item:last-child) {
+    margin-top: 30px; /* 增加顶部间距，避免与上方表单项太近 */
 }
 
-.form .ant-btn {
-    height: 40px;
+/* 让输入框内的文字垂直居中 */
+.form :global(.ant-input),
+.form :global(.ant-input-password) {
+    height: 40px; /* 设置输入框高度 */
+    line-height: 40px; /* 文字垂直居中 */
+    padding: 0 12px; /* 左右内边距 */
+    box-sizing: border-box;
+}
+
+/* 调整输入框高度 */
+.form :global(.ant-input),
+.form :global(.ant-input-password) {
+    height: 40px; /* 统一输入框高度 */
+}
+
+/* 按钮样式 */
+.form :global(.ant-btn) {
+    height: 38px;
     font-size: 16px;
 }
 

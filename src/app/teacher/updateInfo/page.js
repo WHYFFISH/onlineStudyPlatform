@@ -18,6 +18,7 @@ import logo from "../../../assets/homePage/logo.png"
 import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import { Margin } from "@mui/icons-material";
 import { useSearchParams  } from "next/navigation";
+import { Upload, message, Button } from "antd";
 
 const App = () => {
      
@@ -43,9 +44,17 @@ const App = () => {
             在线教育平台
           </div>
           {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-          <NavigatorMenu initialCurrent={'course'} />
+          <NavigatorMenu initialCurrent={'personal'} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
-  
+           <Button
+                      onClick={() => {
+                        localStorage.clear();
+                        router.push('/');
+                      }}
+                      style={{ marginLeft: 60 }}
+                    >
+                      退出登录
+                    </Button>
   
           </div>
         </div>

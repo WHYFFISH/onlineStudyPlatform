@@ -9,6 +9,7 @@ import NavigatorMenu from "../../components/navigatorMenu/page";
 import style from "../PublishClass/PublishClass.module.css";
 import logo from "../../../assets/homePage/logo.png"
 import Image from "next/image";
+import Footer from "../../components/footer/page";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -147,7 +148,7 @@ export default function ImageUploadSorter(courseId) {
 
   return (
     <div>
-      <div className={style.header}>
+      <div className={style.header} style={{marginBottom:64}}>
         <div className={style.logo}>
           <Image className={style.logoIcon} src={logo} alt="Logo" />
           在线教育平台
@@ -155,10 +156,19 @@ export default function ImageUploadSorter(courseId) {
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
         <NavigatorMenu initialCurrent={'personal'} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button
+            onClick={() => {
+              localStorage.clear();
+              router.push('/');
+            }}
+            style={{ marginLeft: 60 }}
+          >
+            退出登录
+          </Button>
         </div>
-        
+
       </div>
-      
+
       <div className={styles.container}>
 
         <h2 >上传首页轮播图</h2>
@@ -187,7 +197,7 @@ export default function ImageUploadSorter(courseId) {
                     right: 0,
                     background: "red",
                     color: "#fff",
-                   
+
                   }}
                   onClick={() => handleDelete(image.id)}
                 />
@@ -204,7 +214,11 @@ export default function ImageUploadSorter(courseId) {
         </Upload>
 
       </div>
+      <div style={{marginTop:30}}> 
+         <Footer />
       </div>
+     
+    </div>
 
 
   );

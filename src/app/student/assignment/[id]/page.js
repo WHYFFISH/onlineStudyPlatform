@@ -47,7 +47,11 @@ export default function AssignmentDetail() {
         const fetchAssignmentDetail = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/assignments/${params.id}`);
+                const response = await fetch(`/api/assignments/${params.id}`, {
+                    headers: {
+                        'userId': localStorage.getItem("userId")
+                    }
+                });
                 if (!response.ok) throw new Error('获取作业详情失败');
                 const data = await response.json();
                 setAssignment(data);
@@ -116,6 +120,7 @@ export default function AssignmentDetail() {
 
             const formData = new FormData();
             formData.append('content', content);
+            formData.append('userId', localStorage.getItem("userId"));
 
             // 处理所有待上传的文件
             for (const file of files) {
