@@ -17,20 +17,11 @@ import logo from "../../../assets/homePage/logo.png"
 import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import { Margin } from "@mui/icons-material";
 const { Header, Content, Sider } = Layout;
-const initialImages = [
-  { id: 1, src: "../../assets/teacher/why.jpg", alt: "课程图片1" },
-  { id: 2, src: "../../assets/teacher/test1.png", alt: "课程图片2" },
-  { id: 3, src: "../../assets/teacher/test2.png", alt: "课程图片3" },
-];
+
 const handleOrderChange = (newOrder) => {
   console.log("更新后的图片顺序:", newOrder);
 };
-// 定义每一栏对应的内容
-const sections = {
-  option1: <ClassInfoContent />,
-  option2: <div>这是 Option 2 的界面内容。</div>,
-  files: <UploadFileContent />,
-};
+
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -55,7 +46,7 @@ const App = () => {
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-        <NavigatorMenu initialCurrent={'course'} />
+        <NavigatorMenu initialCurrent={'personal'} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
 
 

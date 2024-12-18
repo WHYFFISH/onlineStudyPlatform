@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import CourseList from "./components/CourseList";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import whyAvatar from "../../assets/teacher/why.jpg"
+import whyAvatar from "../../assets/homePage/avatar.jpg"
 import Image from "next/image";
 import Link from 'next/link';
 import { getAllCourses } from "../teacher/utils/indexDB";
@@ -62,6 +62,7 @@ export default function TeacherDetailsPage() {
 
   const [courses, setCourses] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [Ncourses, setNCourses] = useState([]);
 
   const fetchDiscussions = async () => {
     try {
@@ -106,7 +107,13 @@ export default function TeacherDetailsPage() {
       }
     };
 
+    const fetchNCourses = async () => {
+      const data = await getAllCourses();
+      setNCourses(data); // 更新课程状态
+    };
+
     fetchCourses();
+    fetchNCourses();
     fetchDiscussions();
   }, []);
 
@@ -118,6 +125,15 @@ export default function TeacherDetailsPage() {
     router.push(`/teacher/homework?courseId=${courseId}`);
   };
 
+  const goToPicPublish = (courseId) => {
+    router.push(`/teacher/uploadPic?courseId=${courseId}`);
+  };
+  const goToUpdateInfo = (courseId) => {
+    const courseData = { id: courseId, name: "CourseId" };
+    router.push(`/teacher/updateInfo?id=${courseId}`)
+  };
+
+
   const redirectToCoursePage = () => {
     router.push(`/teacher/PublishClass`);
   }
@@ -127,9 +143,18 @@ export default function TeacherDetailsPage() {
       <div className={styles.courses}>
         <h2>我的课程</h2>
         <CourseList
+          courses={Ncourses}
+          onUploadClick={goToCoursewareUpload}
+          onHomeworkClick={goToHomeworkPublish}
+          onPickClick={goToPicPublish}
+          onUpdateClick={goToUpdateInfo}
+        />
+        <CourseList
           courses={courses}
           onUploadClick={goToCoursewareUpload}
           onHomeworkClick={goToHomeworkPublish}
+          onPickClick={goToPicPublish}
+          onUpdateClick={goToUpdateInfo}
         />
       </div>
       <Link href="teacher/PublishClass">
@@ -260,7 +285,7 @@ export default function TeacherDetailsPage() {
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-        <NavigatorMenu initialCurrent={'course'} />
+        <NavigatorMenu initialCurrent={'personal'} />
         <div style={{ display: 'flex', alignItems: 'center' }}>
 
         </div>

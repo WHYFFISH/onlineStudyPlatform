@@ -1,15 +1,25 @@
 .container {
+ 
+  /* padding-top: 80px; */
     text-align: center;
     padding: 30px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 60%;
     /* margin: 20px; */
    margin-bottom: 20px;
+   /* margin-top: 64px; */
+   margin: 0 auto;
+    padding-top: 160px; 
    
   }
+
+  .main {
+    margin-top: 80px; /* 根据 header 高度进行调整 */
+  }
+  
   
   .imageList {
     list-style: none;

@@ -64,25 +64,30 @@ const FilesContent = () => {
             alert("请完整填写课程标题和描述！");
             return;
         }
-
-
+        const courseToSave = { ...courseInfo };
+        if (!courseInfo.id) {
+            const nextId = await getNextCourseId();
+            courseToSave.id = nextId;
+        }
 
         try {
             // let courseToSave = { ...courseInfo };
-           
 
-            const nextId = await getNextCourseId();
-            const courseToSave = { ...courseInfo ,id: nextId };
-            // courseToSave.id = nextId;
-            // delete courseInfo.id;
-            await addCourse(courseToSave); // 添加课程
-            alert('课程发布成功，课程编号为: ');
+            if (courseInfo.id) {
+                await updateCourse(courseInfo); // 更新课程
+                alert("课程更新成功！");
+            } else {
+                delete courseToSave.id;
+                await addCourse(courseInfo); // 添加课程
+                alert('课程发布成功，课程编号为: ');
+            }
 
-
+            const updatedCourses = await getAllCourses();
+            setCourses(updatedCourses);
 
         } catch (error) {
             alert("操作失败，请稍后重试！");
-            console.log(error);
+            console.error(error);
         }
     };
     const initialImages = [
@@ -112,7 +117,7 @@ const FilesContent = () => {
     return (
         <div className={style.centerContainer}>
 
-            <h1 className={style.centertitle} >发布新课程</h1>
+            <h1 className={style.centertitle}>{courseInfo.id ? "修改课程详情" : "发布新课程"}</h1>
 
             <div className={style.labelInputContainer}>
                 <label>课程名：</label>
@@ -177,10 +182,14 @@ const FilesContent = () => {
                 </Flex>
             </div>
 
-         
+            <div className={style.sectionBox}>
+
+                <ImageSorter courseId={courseInfo.id} />
+                <Upload />
+            </div>
 
             <button className={style.actionButton} onClick={handleSubmit}>
-                发布
+                {courseInfo.id ? "更新" : "发布"}
             </button>
         </div>
     );
