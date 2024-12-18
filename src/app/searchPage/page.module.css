@@ -1,0 +1,85 @@
+.container {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  max-height: 100vh;
+  width: 100vw;
+  /* background-color: rgb(245, 245, 245); */
+  background-color: rgb(255, 255, 255);
+  /* overflow-x: auto; */
+  overflow: hidden;
+  overflow-x: hidden;
+  /* 禁止横向滚动 */
+  overflow-y: auto;
+  /* 允许垂直滚动 */
+}
+
+.header {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  z-index: 5;
+}
+
+.logo {
+  width: 340px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-right: 30px;
+}
+
+.logoIcon {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+}
+.typeContent{
+  width: 1220px;
+  height: 240px;
+  /* background-color: #661010; */
+  border-radius: 10px;
+  margin-top: 84px;
+  object-fit: fit;
+}
+.searchType{
+  width: 100%;
+  height: 100%;
+  object-fit:contain;
+  border-radius: 10px;
+}
+.recommendedCoursesTitle {
+  width: 1220px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.filterControls{
+  margin-left: 20px;
+}
+
+.courseList{
+  margin-top: 30px;
+  width: 1220px;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+
+
+.footer {
+  width: 100%;
+  height: 300px;
+  margin-top: 30px;
+
+}

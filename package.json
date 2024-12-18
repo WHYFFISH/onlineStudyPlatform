@@ -1,0 +1,33 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^5.16.11",
+    "@mui/material": "^5.16.11",
+    "@mui/x-date-pickers": "^7.23.2",
+    "ali-oss": "^6.22.0",
+    "antd": "^5.22.5",
+    "bcryptjs": "^2.4.3",
+    "browser-image-compression": "^2.0.2",
+    "date-fns": "^4.1.0",
+    "graceful-fs": "^4.2.11",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.5",
+    "mz": "^2.7.0",
+    "next": "^15.1.0",
+    "rc-util": "^5.44.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.0",
+    "utility": "^2.2.0"
+  }
+}

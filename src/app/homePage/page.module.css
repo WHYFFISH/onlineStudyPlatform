@@ -1,0 +1,207 @@
+.container {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  max-height: 100vh;
+  width: 100vw;
+  background-color: rgb(245, 245, 245);
+  /* overflow-x: auto; */
+  overflow: hidden;
+  overflow-x: hidden;
+  /* 禁止横向滚动 */
+  overflow-y: auto;
+  /* 允许垂直滚动 */
+}
+
+.header {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  z-index: 5;
+}
+
+.logo {
+  width: 340px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-right: 30px;
+}
+
+.logoIcon {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+}
+
+.banner {
+  width: 1220px;
+  height: 380px;
+  margin-top: 84px;
+  /* background-color: rosybrown; */
+  display: flex;
+}
+
+.leftContent {
+  width: 200px;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 15px;
+  margin-right: 10px;
+  padding: 20px 15px;
+}
+
+.carousel {
+  width: 800px;
+  height: 380px;
+  cursor: pointer;
+  border-radius: 15px;
+  margin-right: 10px;
+
+}
+
+.carouselImage {
+  width: 800px;
+  height: 380px;
+  border-radius: 15px;
+}
+
+.rightContent {
+  width: 200px;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 15px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recommendedCoursesTitle {
+  width: 1220px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.filterControls{
+  margin-left: 20px;
+}
+
+.recommendedCoursesList {
+  width: 1220px;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.recommendedCoursesItem {
+  width: 280px;
+  height: 350px;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* 加入过渡效果 */
+  padding: 0;
+}
+
+.recommendedCoursesItem:hover {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.courseImage {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 192px;
+  object-fit: fill;
+  border-radius: 15px;
+}
+
+.courseName {
+  margin-top: 15px;
+  margin-left: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.courseAuthor {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.courseSchool {
+  margin-top: 5px;
+  margin-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+.courseDetails{
+  margin-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.typeItem {
+  width: 100%;
+  height: 70px;
+}
+
+.typeItemTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  cursor: pointer;
+  /* 鼠标悬停时显示指针手势 */
+  transition: color 0.3s ease;
+}
+
+.typeItemTitle:hover {
+  color: #1890ff;
+  /* Ant Design 默认的蓝色，可以根据需要自定义 */
+}
+
+.typeItemContentItem {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.typeItemContentItem span {
+  margin-right: 5px;
+  cursor: pointer;
+  /* 鼠标悬停时显示指针手势 */
+  transition: color 0.3s ease;
+  /* 添加过渡效果，让颜色变化更平滑 */
+  color: #555;
+}
+
+.typeItemContentItem span:hover {
+  color: #1890ff;
+  /* Ant Design 默认的蓝色，可以根据需要自定义 */
+}
+
+.footer {
+  width: 100%;
+  height: 400px;
+  margin-top: 30px;
+
+}
