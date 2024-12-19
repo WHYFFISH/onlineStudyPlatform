@@ -12,13 +12,19 @@ const ProfileCard = () => {
   const [userRole, setUserRole] = React.useState('');
   const [userName, setUserName] = React.useState('');
   const toPersonalPage = () => {
-    router.push('/student');
+    if (userRole === 'student') {
+      router.push('/student');
+    }
+    else{
+      router.push('/teacher');
+    }
+    
   }
   // 在组件挂载时检查 localStorage
   React.useEffect(() => {
     // 获取 localStorage 中的 userId
     const userRole = localStorage.getItem('role');
-    const userName = localStorage.getItem('rememberedAccount');
+    const userName = localStorage.getItem('name');
 
     // 如果 userId 存在，表示用户已登录
     if (userRole) {

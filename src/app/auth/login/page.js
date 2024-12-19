@@ -32,7 +32,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: values.username, // 用户名
+          username: values.name, // 用户名
           password: values.password, // 密码
           role: values.role,         // 登录角色
         }),
@@ -44,8 +44,7 @@ const Login = () => {
         // 登录成功
         alert("登录成功！");
         localStorage.setItem("userId", data.user.id); // 记住用户名
-        console.log("登录成功，用户ID:", data.user.id);
-        localStorage.setItem("rememberedAccount", values.username); // 记住用户名
+        localStorage.setItem("name", values.name); // 记住用户名
         localStorage.setItem("role", data.user.role); // 记住角色
         router.push("/homePage"); // 跳转到主页
       } else {
@@ -72,7 +71,7 @@ const Login = () => {
           onFinish={onFinish}
           method="post"
           initialValues={{
-            username: localStorage.getItem("rememberedAccount") || "", // 自动填充记住的用户名
+            name: localStorage.getItem("name") || "", // 自动填充记住的用户名
             remember: true, // 默认勾选记住用户名
             role: "student", // 默认角色
           }}
@@ -87,15 +86,15 @@ const Login = () => {
               placeholder="请选择角色"
               onChange={(value) => setRole(value)}
             >
-              <Option value="student">学生</Option>
-              <Option value="teacher">教师</Option>
-              <Option value="admin">系统管理员</Option>
+              <Select.Option value="student">学生</Select.Option>
+              <Select.Option value="teacher">教师</Select.Option>
+              <Select.Option value="admin">系统管理员</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             label="用户名(姓名或手机号）"
-            name="username"
+            name="name"
             rules={[{ required: true, message: "请输入用户名" }]}
           >
             <Input placeholder="请输入用户名" />

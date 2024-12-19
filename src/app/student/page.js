@@ -98,7 +98,7 @@ export default function StudentDashboard() {
     React.useEffect(() => {
         // 获取 localStorage 中的 userId
         const userRole = localStorage.getItem('role');
-        const userName = localStorage.getItem('rememberedAccount');
+        const userName = localStorage.getItem('name');
 
         // 如果 userId 存在，表示用户已登录
         if (userRole) {

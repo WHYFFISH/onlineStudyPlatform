@@ -97,7 +97,7 @@ const CoursePage = () => {
   useEffect(() => {
     // 获取 localStorage 中的 userId
     const userRole = localStorage.getItem('role');
-    const userName = localStorage.getItem('rememberedAccount');
+    const userName = localStorage.getItem('name');
 
     // 如果 userId 存在，表示用户已登录
     if (userRole) {
@@ -211,7 +211,7 @@ const CoursePage = () => {
       {/* 页首导航 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
+          <Image className={styles.logoIcon} src={logo} alt="Logo" priority />
           在线教育平台
         </div>
         <NavigatorMenu initialCurrent={'school'} />
@@ -224,21 +224,25 @@ const CoursePage = () => {
             style={{ width: 260, marginRight: '60px' }}
             onPressEnter={handlePressEnter} // 监听回车事件
           />
-          <Button type="primary" onClick={handleLoginClick}>登录</Button>
-          <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+          {!userRole && (
+            <div>
+              <Button type="primary" onClick={handleLoginClick}>登录</Button>
+              <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+            </div>
+          )}
         </div>
       </div>
       <div className={styles.content}>
         <div className={styles.carousel}>
           <Carousel autoplay>
             <div>
-              <Image className={styles.carouselImage} src={course1} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={course1} alt="carousel1" priority />
             </div>
             <div>
-              <Image className={styles.carouselImage} src={course2} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={course2} alt="carousel1" priority />
             </div>
             <div>
-              <Image className={styles.carouselImage} src={course3} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={course3} alt="carousel1" priority />
             </div>
           </Carousel>
         </div>

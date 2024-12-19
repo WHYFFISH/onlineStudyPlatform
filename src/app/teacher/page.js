@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import CourseList from "./components/CourseList";
 import styles from "./page.module.css";
-import { useRouter } from "next/navigation";
-import whyAvatar from "../../assets/homePage/avatar.jpg"
+import {useRouter} from "next/navigation";
+import whyAvatar from "../../assets/teacher/why.jpg"
 import Image from "next/image";
 import Link from 'next/link';
-import { getAllCourses } from "../teacher/utils/indexDB";
+import {getAllCourses} from "../teacher/utils/indexDB";
 import NavigatorMenu from "../components/navigatorMenu/page";
 import Footer from "../components/footer/page";
 import logo from "../../assets/homePage/logo.png"
@@ -40,7 +40,7 @@ import {
 } from '@mui/material';
 
 // Mock 数据，包含50个学生信息
-const mockStudents = Array.from({ length: 50 }, (_, i) => ({
+const mockStudents = Array.from({length: 50}, (_, i) => ({
     id: i + 1,
     name: `学生${i + 1}`,
     email: `student${i + 1}@example.com`,
@@ -49,9 +49,9 @@ const mockStudents = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 const menuItems = [
-    { key: 'courses', label: '我的课程', icon: '🎓' },
-    { key: 'discussion', label: '讨论专区', icon: '💬' },
-    { key: 'assignments', label: '作业管理', icon: '📝' },
+    {key: 'courses', label: '我的课程', icon: '🎓'},
+    {key: 'discussion', label: '讨论专区', icon: '💬'},
+    {key: 'assignments', label: '作业管理', icon: '📝'},
 ];
 
 
@@ -59,7 +59,7 @@ export default function TeacherDetailsPage() {
     const router = useRouter();
     const [students, setStudents] = useState(mockStudents); // 存储学生列表数据
     const [selectedStudents, setSelectedStudents] = useState([]); // 批量选中状态
-    // const [activeKey, setActiveKey] = useState('courses');
+    const [activeKey, setActiveKey] = useState('courses');
 
     const toggleSelection = (id) => {
         setSelectedStudents((prev) =>
@@ -75,7 +75,7 @@ export default function TeacherDetailsPage() {
         setStudents((prev) =>
             prev.map((student) =>
                 student.id === id
-                    ? { ...student, status: student.status === "active" ? "suspended" : "active" }
+                    ? {...student, status: student.status === "active" ? "suspended" : "active"}
                     : student
             )
         );
@@ -114,7 +114,6 @@ export default function TeacherDetailsPage() {
     };
 
     const [courses, setCourses] = useState([]);
-    const [Ncourses, setNCourses] = useState([]);
     const [tasks, setTasks] = useState([]);
 
     const fetchDiscussions = async () => {
@@ -164,13 +163,8 @@ export default function TeacherDetailsPage() {
             }
         };
 
-        const fetchNCourses = async () => {
-            const data = await getAllCourses();
-            setNCourses(data); // 更新课程状态
-        };
 
         fetchCourses();
-        fetchNCourses();
         fetchDiscussions();
     }, []);
 
@@ -182,19 +176,11 @@ export default function TeacherDetailsPage() {
         router.push(`/teacher/homework?courseId=${courseId}`);
     };
 
-    const goToPicPublish = (courseId) => {
-        router.push(`/teacher/uploadPic?courseId=${courseId}`);
-    };
-    const goToUpdateInfo = (courseId) => {
-        const courseData = { id: courseId, name: "CourseId" };
-        router.push(`/teacher/updateInfo?id=${courseId}`)
-    };
-
     const redirectToCoursePage = () => {
         router.push(`/teacher/PublishClass`);
     }
 
-    function StudentManagement({ students }) {
+    function StudentManagement({students}) {
         return (
             <div className={styles.content}>
                 <h2>学生管理</h2>
@@ -202,7 +188,7 @@ export default function TeacherDetailsPage() {
                     variant="contained"
                     color="error"
                     onClick={deleteSelectedStudents}
-                    style={{ marginBottom: "16px" }}
+                    style={{marginBottom: "16px"}}
                 >
                     批量删除
                 </Button>
@@ -256,7 +242,7 @@ export default function TeacherDetailsPage() {
                                             variant="outlined"
                                             color={student.status === "active" ? "secondary" : "success"}
                                             onClick={() => toggleStatus(student.id)}
-                                            style={{ marginLeft: "8px" }}
+                                            style={{marginLeft: "8px"}}
                                         >
                                             {student.status === "active" ? "禁用" : "启用"}
                                         </Button>
@@ -265,7 +251,7 @@ export default function TeacherDetailsPage() {
                                             variant="contained"
                                             color="error"
                                             onClick={() => deleteStudent(student.id)}
-                                            style={{ marginLeft: "8px" }}
+                                            style={{marginLeft: "8px"}}
                                         >
                                             删除
                                         </Button>
@@ -292,18 +278,9 @@ export default function TeacherDetailsPage() {
             <div className={styles.courses}>
                 <h2>我的课程</h2>
                 <CourseList
-                    courses={Ncourses}
-                    onUploadClick={goToCoursewareUpload}
-                    onHomeworkClick={goToHomeworkPublish}
-                    onPickClick={goToPicPublish}
-                    onUpdateClick={goToUpdateInfo}
-                />
-                <CourseList
                     courses={courses}
                     onUploadClick={goToCoursewareUpload}
                     onHomeworkClick={goToHomeworkPublish}
-                    onPickClick={goToPicPublish}
-                    onUpdateClick={goToUpdateInfo}
                 />
             </div>
             <Link href="teacher/PublishClass">
@@ -324,13 +301,13 @@ export default function TeacherDetailsPage() {
                         }}
                     >
                         {/* 顶部部分：头像、标题、作者和时间 */}
-                        <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+                        <Box sx={{display: "flex", alignItems: "flex-start", mb: 1}}>
                             <Avatar
                                 src={discussion.author_avatar || "/default-avatar.png"} // 默认头像
-                                sx={{ width: 40, height: 40, mr: 2 }}
+                                sx={{width: 40, height: 40, mr: 2}}
                             />
-                            <Box sx={{ flex: 1 }}>
-                                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                            <Box sx={{flex: 1}}>
+                                <Typography variant="subtitle1" sx={{fontWeight: "bold"}}>
                                     {discussion.title}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
@@ -355,7 +332,7 @@ export default function TeacherDetailsPage() {
                         </Typography>
 
                         {/* 底部：回复数量与详情按钮 */}
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
                             <Typography variant="body2" color="text.secondary">
                                 {discussion.reply_count} 回复
                             </Typography>
@@ -402,7 +379,7 @@ export default function TeacherDetailsPage() {
                                     <Typography
                                         variant="body2"
                                         color="error"
-                                        sx={{ fontStyle: 'italic' }}
+                                        sx={{fontStyle: 'italic'}}
                                     >
                                         已过期
                                     </Typography>
@@ -422,30 +399,22 @@ export default function TeacherDetailsPage() {
 
         </div>,
 
-        permissions: <StudentManagement students={students} />,
+        permissions: <StudentManagement students={students}/>,
 
     };
 
-    const [activeKey, setActiveKey] = useState('courses');
     return (
-        <div class>
+        <div className={styles.mainContainer}>
+
             <div className={styles.header}>
                 <div className={styles.logo}>
-                    <Image className={styles.logoIcon} src={logo} alt="Logo" />
+                    <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
                     在线教育平台
                 </div>
                 {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-                <NavigatorMenu initialCurrent={'personal'} />
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button
-                        onClick={() => {
-                            localStorage.clear();
-                            router.push('/');
-                        }}
-                        style={{ marginLeft: 60 }}
-                    >
-                        退出登录
-                    </Button>
+                <NavigatorMenu initialCurrent={'course'}/>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+
                 </div>
             </div>
 
@@ -469,7 +438,7 @@ export default function TeacherDetailsPage() {
                 <div className={styles.container}>
                     {/* 左侧菜单 */}
                     <div className={styles.sidebar}>
-
+                        <h3>学习工具</h3>
                         <ul>
                             {menuItems.map((item) => (
                                 <li
@@ -483,7 +452,7 @@ export default function TeacherDetailsPage() {
                         </ul>
                         {/* 权限管理模块 */}
                         <div className={styles.section}>
-
+                            <h3>权限管理</h3>
                             <ul>
                                 <li
                                     className={activeKey === "permissions" ? styles.active : ""}
@@ -518,7 +487,7 @@ export default function TeacherDetailsPage() {
         </Link> */}
 
             </div>
-            <Footer />
+            <Footer/>
         </div>
 
     );
