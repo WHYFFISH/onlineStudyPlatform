@@ -5,7 +5,7 @@ import {
   FileOutlined,
   PieChartOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme, Input } from "antd";
+import { Layout, Menu, theme, Input ,Button} from "antd";
 import Image from "next/image";
 import ImageSorter from "../components/UploadPicDrag";
 import style from "./PublishClass.module.css";

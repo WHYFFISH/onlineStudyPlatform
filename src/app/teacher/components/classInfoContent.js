@@ -4,11 +4,7 @@ import { Flex } from "antd";
 import { addCourse, getAllCourses, updateCourse, getNextCourseId, openDatabase } from "../utils/indexDB";
 import AddTeacherInfo from "../components/addTeacherInfo";
 import style from "../../teacher/PublishClass/PublishClass.module.css";
-import ImageSorter from "./UploadPicDrag";
-import Upload from "../../teacher/components/Upload";
-import UploadPic from "../../teacher/components/UploadPic";
-import Idb from 'idb-js';
-import db_teacher_config from "../utils/IDB_Config";
+
 
 const { TextArea } = Input;
 
@@ -125,33 +121,33 @@ const FilesContent = () => {
             </div>
 
             <div className={style.labelInputContainer}>
-                <label>老师ID：</label>
+                <label>老师姓名：</label>
                 <Input
-                    placeholder=""
+                    placeholder="请输入老师姓名"
                     value={courseInfo.teacher}
                     onChange={(e) => handleChange("teacher", e.target.value)}
-                    style={{ width: "145px" }}
+                    style={{ width: "140px" }}
                 />
                 <label>课程时长：</label>
                 <Input
-                    placeholder=""
+                    placeholder="请输入课程时长"
                     value={courseInfo.total_hours}
                     onChange={(e) => handleChange("total_hours", e.target.value)}
-                    style={{ width: "145px" }}
+                    style={{ width: "130px" }}
                 />
             </div>
 
             <div className={style.labelInputContainer}>
-                <label style={{ marginRight: 10 }}>价格：</label>
+                <label>价格：</label>
                 <Input
-                    placeholder=""
+                    placeholder="请输入课程价格"
                     value={courseInfo.price}
                     onChange={(e) => handleChange("price", e.target.value)}
-                    style={{ width: "150px", marginRight: 15 }}
+                    style={{ width: "150px", marginRight: 25 }}
                 />
                 <label style={{ marginRight: 10 }}>状态：</label>
                 <Input
-                    placeholder=""
+                    placeholder="请输入课程状态"
                     value={courseInfo.status}
                     onChange={(e) => handleChange("status", e.target.value)}
                     style={{ width: "150px" }}

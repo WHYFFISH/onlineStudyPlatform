@@ -119,7 +119,11 @@ export default function TeacherDetailsPage() {
 
     const fetchDiscussions = async () => {
         try {
-            const response = await fetch('/api/discussions/recent');
+            const response = await fetch('/api/discussions/recent', {
+                headers: {
+                    'userId': localStorage.getItem("userId")
+                }
+            });
             if (!response.ok) {
                 throw new Error('获取讨论失败');
             }
