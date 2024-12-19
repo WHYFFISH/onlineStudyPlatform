@@ -24,7 +24,7 @@ export async function GET(request) {
                 c.likes,
                 u.name as instructor_name,
                 u.id as instructor_id,
-                (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id) as registration_count
+                c.registration_count as registration_count
             FROM courses c
             LEFT JOIN users u ON c.instructor_id = u.id
             WHERE 1=1
