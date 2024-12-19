@@ -147,7 +147,7 @@ export default function ImageUploadSorter(courseId) {
 
   return (
     <div>
-      <div className={style.header} style={{marginBottom:64}}>
+      <div className={style.header} style={{ marginBottom: 64 }}>
         <div className={style.logo}>
           <Image className={style.logoIcon} src={logo} alt="Logo" />
           在线教育平台
@@ -213,10 +213,10 @@ export default function ImageUploadSorter(courseId) {
         </Upload>
 
       </div>
-      <div style={{marginTop:30}}> 
+      {/* <div style={{marginTop:30}}> 
          <Footer />
       </div>
-     
+      */}
     </div>
 
 

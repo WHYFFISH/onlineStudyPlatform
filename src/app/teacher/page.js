@@ -1,46 +1,33 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import CourseList from "./components/CourseList";
 import styles from "./page.module.css";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import whyAvatar from "../../assets/teacher/why.jpg"
 import Image from "next/image";
 import Link from 'next/link';
-import {getAllCourses} from "../teacher/utils/indexDB";
+import { getAllCourses } from "../teacher/utils/indexDB";
 import NavigatorMenu from "../components/navigatorMenu/page";
 import Footer from "../components/footer/page";
 import logo from "../../assets/homePage/logo.png"
 import {
     Box,
-    AppBar,
-    Toolbar,
     Typography,
-    IconButton,
     Avatar,
-    Container,
-    Grid,
-    Card,
-    LinearProgress,
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TableRow,
-    CssBaseline,
-    Divider,
-    CardMedia,
-    CardContent,
     Button,
-    MenuItem,
-    Menu,
-    Input,
     Checkbox,
+    Card,
+    CardContent,
 } from '@mui/material';
 
 // Mock 数据，包含50个学生信息
-const mockStudents = Array.from({length: 50}, (_, i) => ({
+const mockStudents = Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
     name: `学生${i + 1}`,
     email: `student${i + 1}@example.com`,
@@ -49,18 +36,30 @@ const mockStudents = Array.from({length: 50}, (_, i) => ({
 }));
 
 const menuItems = [
-    {key: 'courses', label: '我的课程', icon: '🎓'},
-    {key: 'discussion', label: '讨论专区', icon: '💬'},
-    {key: 'assignments', label: '作业管理', icon: '📝'},
+    { key: 'courses', label: '我的课程', icon: '🎓' },
+    { key: 'discussion', label: '讨论专区', icon: '💬' },
+    { key: 'assignments', label: '作业管理', icon: '📝' },
 ];
 
+// 添加作业列表样式
+const assignmentStyles = {
+    content: {
+        marginTop: '2rem',
+        padding: '1rem',
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+    }
+};
 
 export default function TeacherDetailsPage() {
     const router = useRouter();
     const [students, setStudents] = useState(mockStudents); // 存储学生列表数据
     const [selectedStudents, setSelectedStudents] = useState([]); // 批量选中状态
     const [activeKey, setActiveKey] = useState('courses');
-
+    const [userRole, setUserRole] = useState('');
+    const [assignments, setAssignments] = useState([]);
+    const [error, setError] = useState('');
     const toggleSelection = (id) => {
         setSelectedStudents((prev) =>
             prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -70,12 +69,22 @@ export default function TeacherDetailsPage() {
     const resetPassword = (id) => {
         alert(`学生ID: ${id} 的密码已重置为默认密码: "123456"`);
     };
+    React.useEffect(() => {
+        // 获取 localStorage 中的 userId
+        const userRole = localStorage.getItem('role');
+        const userName = localStorage.getItem('name');
 
+        // 如果 userId 存在，表示用户已登录
+        if (userRole) {
+            setUserRole(userRole);
+            // setUserName(userName);
+        }
+    }, []); // 空数组，表示只在组件挂载时执行一次
     const toggleStatus = (id) => {
         setStudents((prev) =>
             prev.map((student) =>
                 student.id === id
-                    ? {...student, status: student.status === "active" ? "suspended" : "active"}
+                    ? { ...student, status: student.status === "active" ? "suspended" : "active" }
                     : student
             )
         );
@@ -120,13 +129,19 @@ export default function TeacherDetailsPage() {
     const fetchDiscussions = async () => {
         try {
             const response = await fetch('/api/discussions/recent', {
+                method: 'POST',
                 headers: {
-                    'userId': localStorage.getItem("userId")
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    teacherId: localStorage.getItem("userId")
+                })
             });
+
             if (!response.ok) {
                 throw new Error('获取讨论失败');
             }
+
             const data = await response.json();
             setDiscussions(data.discussions || []);
         } catch (err) {
@@ -134,7 +149,15 @@ export default function TeacherDetailsPage() {
             setDiscussions([]);
         }
     };
+    // 点击事件处理，跳转到登录页面
+    const handleLoginClick = () => {
+        router.push("/auth/login");
+    };
 
+    // 点击事件处理，跳转到注册页面
+    const handleRegisterClick = () => {
+        router.push("/auth/register");
+    };
     const fetchTasks = async () => {
         try {
             const response = await fetch('/api/tasks/pending');
@@ -164,7 +187,7 @@ export default function TeacherDetailsPage() {
             }
         };
 
-        const fetchNCourse=async()=>{
+        const fetchNCourse = async () => {
             try {
                 const data = await getAllCourses();
                 setNCourses(data);
@@ -175,10 +198,38 @@ export default function TeacherDetailsPage() {
             }
         }
 
+        const fetchAssignments = async () => {
+            try {
+                const response = await fetch('/api/assignments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        teacherId: localStorage.getItem('userId')
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('获取作业列表失败');
+                }
+
+                const data = await response.json();
+                setAssignments(data.assignments.map(assignment => ({
+                    ...assignment,
+                    deadline: new Date(assignment.deadline).toLocaleString(),
+                    status: getAssignmentStatus(assignment)
+                })));
+            } catch (error) {
+                console.error('获取作业列表失败:', error);
+                setError('获取作业列表失败');
+            }
+        };
 
         fetchCourses();
         fetchNCourse();
         fetchDiscussions();
+        fetchAssignments();
     }, []);
 
     const goToCoursewareUpload = (courses) => {
@@ -197,12 +248,24 @@ export default function TeacherDetailsPage() {
         router.push(`/teacher/uploadPic?courseId=${courseId}`);
     };
 
-    const goToUpdateInfo= (courseId) => {
+    const goToUpdateInfo = (courseId) => {
         router.push(`/teacher/updateInfo?courseId=${courseId}`);
     };
 
+    const getAssignmentStatus = (assignment) => {
+        const now = new Date();
+        const deadline = new Date(assignment.deadline);
 
-    function StudentManagement({students}) {
+        if (now > deadline) {
+            return '已截止';
+        }
+        if (assignment.submission_count > 0) {
+            return `已提交 ${assignment.submission_count}`;
+        }
+        return '进行中';
+    };
+
+    function StudentManagement({ students }) {
         return (
             <div className={styles.content}>
                 <h2>学生管理</h2>
@@ -210,7 +273,7 @@ export default function TeacherDetailsPage() {
                     variant="contained"
                     color="error"
                     onClick={deleteSelectedStudents}
-                    style={{marginBottom: "16px"}}
+                    style={{ marginBottom: "16px" }}
                 >
                     批量删除
                 </Button>
@@ -264,7 +327,7 @@ export default function TeacherDetailsPage() {
                                             variant="outlined"
                                             color={student.status === "active" ? "secondary" : "success"}
                                             onClick={() => toggleStatus(student.id)}
-                                            style={{marginLeft: "8px"}}
+                                            style={{ marginLeft: "8px" }}
                                         >
                                             {student.status === "active" ? "禁用" : "启用"}
                                         </Button>
@@ -273,7 +336,7 @@ export default function TeacherDetailsPage() {
                                             variant="contained"
                                             color="error"
                                             onClick={() => deleteStudent(student.id)}
-                                            style={{marginLeft: "8px"}}
+                                            style={{ marginLeft: "8px" }}
                                         >
                                             删除
                                         </Button>
@@ -336,13 +399,13 @@ export default function TeacherDetailsPage() {
                         }}
                     >
                         {/* 顶部部分：头像、标题、作者和时间 */}
-                        <Box sx={{display: "flex", alignItems: "flex-start", mb: 1}}>
+                        <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
                             <Avatar
                                 src={discussion.author_avatar || "/default-avatar.png"} // 默认头像
-                                sx={{width: 40, height: 40, mr: 2}}
+                                sx={{ width: 40, height: 40, mr: 2 }}
                             />
-                            <Box sx={{flex: 1}}>
-                                <Typography variant="subtitle1" sx={{fontWeight: "bold"}}>
+                            <Box sx={{ flex: 1 }}>
+                                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                                     {discussion.title}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
@@ -367,7 +430,7 @@ export default function TeacherDetailsPage() {
                         </Typography>
 
                         {/* 底部：回复数量与详情按钮 */}
-                        <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                             <Typography variant="body2" color="text.secondary">
                                 {discussion.reply_count} 回复
                             </Typography>
@@ -383,73 +446,98 @@ export default function TeacherDetailsPage() {
             </div>
         ),
         assignments: <div className={styles.content}>
+            <Typography variant="h6" gutterBottom>
+                作业列表
+            </Typography>
 
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>作业名称</TableCell>
-                        <TableCell>课程</TableCell>
-                        <TableCell align="right">截止日期</TableCell>
-                        <TableCell align="right">操作</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {tasks.filter(task => !task.completed).map((task, index) => (
-                        <TableRow key={`pending-${task.id}-${index}`}>
-                            <TableCell>{task.title}</TableCell>
-                            <TableCell>{task.courseName}</TableCell>
-                            <TableCell align="right">
-                                {new Date(task.deadline).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell align="right">
-                                {new Date(task.deadline) > new Date() ? (
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        onClick={() => router.push(`/teacher/assignment/${task.id}`)}
-                                    >
-                                        查看
-                                    </Button>
-                                ) : (
-                                    <Typography
-                                        variant="body2"
-                                        color="error"
-                                        sx={{fontStyle: 'italic'}}
-                                    >
-                                        已过期
-                                    </Typography>
-                                )}
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                    {tasks.filter(task => !task.completed).length === 0 && (
-                        <TableRow>
-                            <TableCell colSpan={4} align="center">
-                                暂无发布作业
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-
+            {assignments.map((assignment) => (
+                <Card key={assignment.id} sx={{ mb: 2 }}>
+                    <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Box>
+                                <Typography variant="h6" gutterBottom>
+                                    {assignment.title}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    课程：{assignment.course_name}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    截止时间：{new Date(assignment.deadline).toLocaleString()}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    满分：{assignment.max_score}分
+                                </Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right' }}>
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: assignment.status === '已截止' ? 'error.main' :
+                                            assignment.status.includes('已提交') ? 'success.main' :
+                                                'warning.main',
+                                        mb: 1
+                                    }}
+                                >
+                                    {assignment.status}
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={() => router.push(`/teacher/assignment/${assignment.id}`)}
+                                >
+                                    查看详情
+                                </Button>
+                            </Box>
+                        </Box>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                                mt: 2,
+                                p: 1,
+                                bgcolor: 'grey.50',
+                                borderRadius: 1,
+                                whiteSpace: 'pre-line'
+                            }}
+                        >
+                            {assignment.description}
+                        </Typography>
+                    </CardContent>
+                </Card>
+            ))}
         </div>,
 
-        permissions: <StudentManagement students={students}/>,
+        permissions: <StudentManagement students={students} />,
 
     };
 
     return (
-        <div className={styles.mainContainer}>
+        <div className={styles.mainContainer} >
 
             <div className={styles.header}>
                 <div className={styles.logo}>
-                    <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
+                    <Image className={styles.logoIcon} src={logo} alt="Logo" priority />
                     在线教育平台
                 </div>
                 {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
-                <NavigatorMenu initialCurrent={'course'}/>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-
+                <NavigatorMenu initialCurrent={'personal'} />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {!userRole ? (
+                        <div>
+                            <Button type="primary" onClick={handleLoginClick}>登录</Button>
+                            <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
+                        </div>
+                    ) : (
+                        <Button
+                            onClick={() => {
+                                localStorage.clear();
+                                router.push('/');
+                            }}
+                            style={{ marginLeft: 60 }}
+                        >
+                            退出登录
+                        </Button>
+                    )}
                 </div>
             </div>
 
@@ -473,7 +561,7 @@ export default function TeacherDetailsPage() {
                 <div className={styles.container}>
                     {/* 左侧菜单 */}
                     <div className={styles.sidebar}>
-                       
+
                         <ul>
                             {menuItems.map((item) => (
                                 <li
@@ -485,9 +573,9 @@ export default function TeacherDetailsPage() {
                                 </li>
                             ))}
                         </ul>
-                        {/* 权限管理模块 */}
+                        {/* 权限管理模�� */}
                         <div className={styles.section}>
-                            
+
                             <ul>
                                 <li
                                     className={activeKey === "permissions" ? styles.active : ""}
@@ -522,7 +610,7 @@ export default function TeacherDetailsPage() {
         </Link> */}
 
             </div>
-            <Footer/>
+            <Footer />
         </div>
 
     );
