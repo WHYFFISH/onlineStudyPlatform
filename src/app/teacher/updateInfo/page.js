@@ -25,8 +25,8 @@ const App = () => {
  
     const UpdateCourse = () => {
         const SearchParams = useSearchParams ();
-         const id=SearchParams.get("id"); // 接收 URL 中的查询参数
-    
+         const id=SearchParams.get("courseId"); // 接收 URL 中的查询参数
+        console.log("id:"+id);
         
     
         return id;

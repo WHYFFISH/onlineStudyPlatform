@@ -114,6 +114,7 @@ export default function TeacherDetailsPage() {
     };
 
     const [courses, setCourses] = useState([]);
+    const [Ncourses, setNCourses] = useState([]);
     const [tasks, setTasks] = useState([]);
 
     const fetchDiscussions = async () => {
@@ -163,8 +164,20 @@ export default function TeacherDetailsPage() {
             }
         };
 
+        const fetchNCourse=async()=>{
+            try {
+                const data = await getAllCourses();
+                setNCourses(data);
+                console.log("Course data:", data);
+            } catch (error) {
+                console.error("加载课程列表失败：", error);
+                setNCourses([]);
+            }
+        }
+
 
         fetchCourses();
+        fetchNCourse();
         fetchDiscussions();
     }, []);
 
@@ -179,6 +192,15 @@ export default function TeacherDetailsPage() {
     const redirectToCoursePage = () => {
         router.push(`/teacher/PublishClass`);
     }
+
+    const goToUploadPic = (courseId) => {
+        router.push(`/teacher/uploadPic?courseId=${courseId}`);
+    };
+
+    const goToUpdateInfo= (courseId) => {
+        router.push(`/teacher/updateInfo?courseId=${courseId}`);
+    };
+
 
     function StudentManagement({students}) {
         return (
@@ -271,6 +293,8 @@ export default function TeacherDetailsPage() {
         );
     }
 
+    console.log("Course :", Ncourses);
+
 
     const ContentComponents = {
 
@@ -278,9 +302,20 @@ export default function TeacherDetailsPage() {
             <div className={styles.courses}>
                 <h2>我的课程</h2>
                 <CourseList
+                    courses={Ncourses}
+                    onUploadClick={goToCoursewareUpload}
+                    onHomeworkClick={goToHomeworkPublish}
+                    onPickClick={goToUploadPic}
+                    onUpdateClick={goToUpdateInfo}
+
+                />
+                <CourseList
                     courses={courses}
                     onUploadClick={goToCoursewareUpload}
                     onHomeworkClick={goToHomeworkPublish}
+                    onPickClick={goToUploadPic}
+                    onUpdateClick={goToUpdateInfo}
+
                 />
             </div>
             <Link href="teacher/PublishClass">
@@ -438,7 +473,7 @@ export default function TeacherDetailsPage() {
                 <div className={styles.container}>
                     {/* 左侧菜单 */}
                     <div className={styles.sidebar}>
-                        <h3>学习工具</h3>
+                       
                         <ul>
                             {menuItems.map((item) => (
                                 <li
@@ -452,7 +487,7 @@ export default function TeacherDetailsPage() {
                         </ul>
                         {/* 权限管理模块 */}
                         <div className={styles.section}>
-                            <h3>权限管理</h3>
+                            
                             <ul>
                                 <li
                                     className={activeKey === "permissions" ? styles.active : ""}
