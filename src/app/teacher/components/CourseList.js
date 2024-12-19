@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from 'next/navigation';
 
 export default function CourseList({ courses, onUploadClick, onHomeworkClick ,onPickClick,onUpdateClick}) {
+    console.log(courses);
     return (
         <div className={styles.courseList}>
             {courses.map((course) => (
