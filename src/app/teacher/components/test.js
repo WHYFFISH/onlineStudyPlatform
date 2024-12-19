@@ -7,8 +7,6 @@ import style from "../../teacher/PublishClass/PublishClass.module.css";
 import ImageSorter from "./UploadPicDrag";
 import Upload from "../../teacher/components/Upload";
 import UploadPic from "../../teacher/components/UploadPic";
-import Idb from 'idb-js';
-import db_teacher_config from "../utils/IDB_Config";
 
 const { TextArea } = Input;
 

@@ -1,5 +1,4 @@
 // src/utils/indexedDbUtils.js
-import Idb from 'idb-js';
 
 // 打开数据库
 export function openDatabase() {

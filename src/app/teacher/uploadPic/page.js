@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { Upload, message, Button } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import styles from "../components/ImageSorter.module.css"; // 引入样式
-import { openDB } from "idb";
 import NavigatorMenu from "../../components/navigatorMenu/page";
 import style from "../PublishClass/PublishClass.module.css";
 import logo from "../../../assets/homePage/logo.png"

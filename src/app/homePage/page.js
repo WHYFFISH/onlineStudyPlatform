@@ -1,6 +1,6 @@
 "use client"
 import { Select, Carousel, Menu, Card, Row, Col, Button, Input, Badge, notification, List, Divider } from 'antd';
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchOutlined, PlayCircleOutlined, HeartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import styles from "./page.module.css";
@@ -26,7 +26,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortField, setSortField] = useState('publishDate');
+  const [sortField, setSortField] = useState('created_at');
   const [sortOrder, setSortOrder] = useState('ascend');
   const router = useRouter();
   const [userRole, setUserRole] = useState('');
@@ -121,7 +121,7 @@ const HomePage = () => {
       {/* 页首导航 */}
       <div className={styles.header}>
         <div className={styles.logo}>
-          <Image className={styles.logoIcon} src={logo} alt="Logo" priority/>
+          <Image className={styles.logoIcon} src={logo} alt="Logo" priority />
           在线教育平台
         </div>
         {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{ width: '390px', fontSize: '16px' }} /> */}
@@ -135,12 +135,21 @@ const HomePage = () => {
             style={{ width: 260, marginRight: '60px' }}
             onPressEnter={handlePressEnter} // 监听回车事件
           />
-          {!userRole && (
+          {!userRole ? (
             <div>
               <Button type="primary" onClick={handleLoginClick}>登录</Button>
               <Button onClick={handleRegisterClick} style={{ marginLeft: 10 }}>注册</Button>
             </div>
-          )}
+          ) : (<Button
+            onClick={() => {
+              localStorage.clear();
+              router.push('/');
+            }}
+            style={{ marginLeft: 35 }}
+          >
+            退出登录
+          </Button>)
+          }
         </div>
       </div>
 
@@ -235,13 +244,13 @@ const HomePage = () => {
         <div className={styles.carousel}>
           <Carousel autoplay>
             <div>
-              <Image className={styles.carouselImage} src={carousel1} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={carousel1} alt="carousel1" priority />
             </div>
             <div>
-              <Image className={styles.carouselImage} src={carousel2} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={carousel2} alt="carousel1" priority />
             </div>
             <div>
-              <Image className={styles.carouselImage} src={carousel3} alt="carousel1" priority/>
+              <Image className={styles.carouselImage} src={carousel3} alt="carousel1" priority />
             </div>
           </Carousel>
         </div>
@@ -262,9 +271,9 @@ const HomePage = () => {
             style={{ width: 200, marginRight: 10 }}
 
           >
-            <Select.Option value="publishDate">发布时间</Select.Option>
-            <Select.Option value="registrationCount">注册人数</Select.Option>
-            <Select.Option value="updateDate">更新时间</Select.Option>
+            <Select.Option value="created_at">发布时间</Select.Option>
+            <Select.Option value="registration_count">注册人数</Select.Option>
+            <Select.Option value="updated_at">更新时间</Select.Option>
             <Select.Option value="likes">点赞人数</Select.Option>
           </Select>
 
@@ -286,7 +295,7 @@ const HomePage = () => {
         {courses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} priority/>
+              alt={course.title} width={200} height={120} priority />
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
@@ -309,7 +318,7 @@ const HomePage = () => {
         {hotCourses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} priority/>
+              alt={course.title} width={200} height={120} priority />
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
@@ -331,7 +340,7 @@ const HomePage = () => {
         {courses.map((course) => (
           <div key={course.id} className={styles.recommendedCoursesItem} onClick={() => handleCourseClick(course.id)}>
             <Image className={styles.courseImage} src={course.thumbnail && course.thumbnail !== '' ? course.thumbnail : course1}
-              alt={course.title} width={200} height={120} priority/>
+              alt={course.title} width={200} height={120} priority />
             <div className={styles.courseName}>{course.title}</div>
             <div className={styles.courseSchool}>{course.instructor_name}</div>
             <div className={styles.courseDetails}>
