@@ -20,6 +20,7 @@
     "browser-image-compression": "^2.0.2",
     "date-fns": "^4.1.0",
     "graceful-fs": "^4.2.11",
+    "idb-js": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.5",
     "mz": "^2.7.0",
