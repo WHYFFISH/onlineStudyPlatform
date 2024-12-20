@@ -76,7 +76,7 @@ const Register = () => {
   // 初始化验证码函数
   const initCaptcha = () => {
     (window).initAlicom4({
-      captchaId: "1b799ad8ff3386a687cf039e1f22d07a",
+      captchaId: "1b799ad8ff3386a687cf0",
       product: 'bind',
       protocol: 'https://'
     }, function (captcha) {
